@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="127" height="28" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="45 45 933.3885498046875 268.33329010009766" width="112" height="30" fill="none">
   <circle cx="75" cy="75" r="30" fill="#A692E5"/>
   <circle cx="75" cy="175" r="30" fill="#A692E5"/>
   <circle cx="75" cy="275" r="30" fill="#A692E5"/>
@@ -8,5 +7,5 @@
   <circle cx="150" cy="275" r="30" fill="#FFFFFF"/>
   <circle cx="225" cy="275" r="30" fill="#A692E5"/>
   <circle cx="225" cy="175" r="30" fill="#A692E5"/>
-  <text x="325" y="275" fill="#FFFFFF" font-size="140" font-family="Arial, sans-serif" font-weight="bold">hookflo</text>
+  <text x="325" y="275" fill="#FFFFFF" font-size="190" font-family="Arial, sans-serif" font-weight="bold">hookflo</text>
 </svg>

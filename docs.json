@@ -1,103 +1,98 @@
 {
-    "$schema": "https://mintlify.com/docs.json",
-    "theme": "mint",
-    "name": "Hookflo Docs",
-    "colors": {
-      "primary": "#16A34A",
-      "light": "#07C983",
-      "dark": "#15803D"
-    },
-    "favicon": "/favicon.svg",
-    "navigation": {
-      "tabs": [
-        {
-          "tab": "Guides",
-          "groups": [
-            {
-              "group": "Get Started",
-              "pages": [
-                "introduction",
-                "getting-started/quickstart",
-                "getting-started/authentication",
-                "getting-started/security"
-              ]
-            },
-            {
-              "group": "Platforms",
-              "pages": [
-                 "webhook-platforms/overview",
-        "webhook-platforms/supabase",
-        "webhook-platforms/clerk",
-        "webhook-platforms/stripe",
-        "webhook-platforms/github"
-
-              ]
-            },
-                 {
-              "group": "Notification Channels",
-              "pages": [
-                "notification-channels/overview",
-                "notification-channels/slack",
-                "notification-channels/email"
-              ]
-            },
-               {
-              "group": "Dashboard",
-              "pages": [
-                "dashboard/overview"
-              ]
-            },
-            {
-              "group": "Security",
-              "pages": [
-                "security/best-practices"
-              ]
-            }
-          ]
-        }
-      ],
-      "global": {
-        "anchors": [
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Hookflo Docs",
+  "colors": {
+    "primary": "#A692E5",
+    "light": "#C5B7F0",
+    "dark": "#7B5FC5"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
           {
-            "anchor": "Documentation",
-            "href": "https://mintlify.com/docs",
-            "icon": "book-open-cover"
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "getting-started/quickstart",
+              "getting-started/authentication",
+              "getting-started/security"
+            ]
           },
           {
-            "anchor": "Community",
-            "href": "https://mintlify.com/community",
-            "icon": "slack"
+            "group": "Platforms",
+            "pages": [
+              "webhook-platforms/overview",
+              "webhook-platforms/supabase",
+              "webhook-platforms/clerk",
+              "webhook-platforms/stripe",
+              "webhook-platforms/github"
+            ]
           },
           {
-            "anchor": "Blog",
-            "href": "https://mintlify.com/blog",
-            "icon": "newspaper"
+            "group": "Notification Channels",
+            "pages": [
+              "notification-channels/overview",
+              "notification-channels/slack",
+              "notification-channels/email"
+            ]
+          },
+          {
+            "group": "Dashboard",
+            "pages": ["dashboard/overview"]
+          },
+          {
+            "group": "Security",
+            "pages": ["security/best-practices"]
           }
         ]
       }
-    },
-    "logo": {
-      "light": "/logo/light.svg",
-      "dark": "/logo/dark.svg"
-    },
-    "navbar": {
-      "links": [
+    ],
+    "global": {
+      "anchors": [
         {
-          "label": "Support",
-          "href": "mailto:team.hookflo@gmail.com"
+          "anchor": "Documentation",
+          "href": "https://mintlify.com/docs",
+          "icon": "book-open-cover"
+        },
+        {
+          "anchor": "Community",
+          "href": "https://mintlify.com/community",
+          "icon": "slack"
+        },
+        {
+          "anchor": "Blog",
+          "href": "https://mintlify.com/blog",
+          "icon": "newspaper"
         }
-      ],
-      "primary": {
-        "type": "button",
-        "label": "Dashboard",
-        "href": "https://hookflo.com/dashboard/webhooks"
+      ]
+    }
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:team.hookflo@gmail.com"
       }
-    },
-    "footer": {
-      "socials": {
-        "x": "https://x.com/mintlify",
-        "github": "https://github.com/mintlify",
-        "linkedin": "https://linkedin.com/company/mintlify"
-      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://hookflo.com/dashboard/webhooks"
+    }
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/mintlify",
+      "github": "https://github.com/mintlify",
+      "linkedin": "https://linkedin.com/company/mintlify"
     }
   }
+}
