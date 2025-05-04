@@ -1,0 +1,227 @@
+---
+title: "GitHub Integration"
+description: "Set up webhooks to receive notifications for repository events from GitHub"
+---
+
+# GitHub Integration
+
+This guide will walk you through setting up a webhook integration between GitHub and HookFlo, enabling you to receive alerts for repository events such as commits, pull requests, issues, and more.
+
+<Note>
+  GitHub webhooks can be configured at the repository or organization level. This guide covers both approaches, with a focus on repository-level webhooks.
+</Note>
+
+## Prerequisites
+
+- A HookFlo account with an active project
+- A GitHub account with admin access to the repository or organization
+- Basic understanding of GitHub's development workflow
+
+## Integration Steps
+
+<Steps>
+  <Step title="Create a Webhook in HookFlo">
+    <Accordion title="Setting Up Your Webhook Endpoint">
+      1. Log in to your HookFlo dashboard
+      2. Navigate to **Integrations** > **Webhook Platforms**
+      3. Click on **+ Add New** and select **GitHub**
+      4. A unique webhook URL will be generated
+      5. Generate a webhook secret (or use the auto-generated one)
+      6. Click **Save Configuration**
+      
+      ![GitHub Integration Setup](/images/github-integration.png)
+      
+      Keep this page open as you'll need both the webhook URL and secret for the next step.
+    </Accordion>
+  </Step>
+
+  <Step title="Add a Webhook to Your GitHub Repository">
+    <Accordion title="Repository-Level Webhook">
+      1. Navigate to your repository on GitHub
+      2. Click on **Settings** in the repository navigation
+      3. Select **Webhooks** from the left sidebar
+      4. Click **Add webhook**
+      5. Enter your HookFlo webhook URL in the **Payload URL** field
+      6. Select **application/json** as the **Content type**
+      7. Enter your webhook secret from HookFlo in the **Secret** field
+      8. Choose which events you want to trigger the webhook (see supported events below)
+      9. Ensure **Active** is checked
+      10. Click **Add webhook**
+      
+      ![GitHub Webhook Configuration](/images/github-webhook-setup.png)
+    </Accordion>
+    
+    <Accordion title="Organization-Level Webhook">
+      If you want to receive events from all repositories in an organization:
+      
+      1. Navigate to your organization on GitHub
+      2. Click on **Settings** in the organization navigation
+      3. Select **Webhooks** from the left sidebar
+      4. Follow the same steps as for repository-level webhooks
+      5. When selecting events, you'll have additional organization-specific events available
+    </Accordion>
+  </Step>
+
+  <Step title="Test Your Integration">
+    <Accordion title="Verifying the Setup">
+      To test that your webhook is working correctly:
+
+      1. In GitHub, go to your webhook settings
+      2. Find your webhook and click **Deliver webhook**
+      3. GitHub will send a ping event to your HookFlo endpoint
+      4. Go to your HookFlo dashboard and check the **Event Logs** section
+      5. You should see the ping event appear
+      
+      You can also test with a real event by creating an issue, making a commit, or opening a pull request in your repository.
+    </Accordion>
+  </Step>
+</Steps>
+
+## Supported Events
+
+GitHub offers a comprehensive set of webhook events. Here are some of the most commonly used:
+
+### Repository Events
+- `push`: When code is pushed to the repository
+- `create`: When a branch or tag is created
+- `delete`: When a branch or tag is deleted
+- `release`: When a release is published
+
+### Pull Request Events
+- `pull_request`: Activities related to pull requests
+- `pull_request_review`: When a PR review is submitted
+- `pull_request_review_comment`: Comments on PR reviews
+
+### Issue Events
+- `issues`: Activities related to issues
+- `issue_comment`: Comments on issues and pull requests
+
+### Workflow Events
+- `workflow_run`: When a GitHub Action workflow run is completed
+- `workflow_job`: When a job in a workflow run is queued, in progress, or completed
+
+### Star Events
+- `star`: When someone stars a repository
+
+For a complete list of events, refer to the [GitHub Webhooks API documentation](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads).
+
+## Webhook Headers
+
+GitHub webhooks include these important headers that HookFlo uses for verification:
+
+- `x-hub-signature-256`: A signature that proves the webhook came from GitHub
+- `x-github-event`: The type of event that triggered the webhook
+- `x-github-delivery`: A unique identifier for the delivery
+
+## Webhook Payload Structure
+
+Here's an example of what the webhook payload looks like for a `push` event:
+
+```json
+{
+  "ref": "refs/heads/main",
+  "before": "6113728f27ae8ccbca87773992c3dd9e2de58944",
+  "after": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+  "repository": {
+    "id": 123456,
+    "node_id": "MDEwOlJlcG9zaXRvcnkxMjM0NTY=",
+    "name": "project-name",
+    "full_name": "organization/project-name",
+    "owner": {
+      "name": "organization",
+      "email": "org@example.com"
+    },
+    "html_url": "https://github.com/organization/project-name"
+  },
+  "pusher": {
+    "name": "username",
+    "email": "user@example.com"
+  },
+  "commits": [
+    {
+      "id": "7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+      "message": "Fix bug in authentication flow",
+      "timestamp": "2023-04-01T12:00:00Z",
+      "author": {
+        "name": "Developer Name",
+        "email": "developer@example.com"
+      },
+      "url": "https://github.com/organization/project-name/commit/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d"
+    }
+  ]
+}
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Webhook Signature Verification Failures">
+    If you're seeing signature verification errors:
+1. Double-check that you've entered the same secret in both GitHub and HookFlo
+2. Ensure the secret doesn't contain any special characters that might be causing issues
+3. Check that the correct headers are being sent from GitHub
+  </Accordion>
+  <Accordion title="Missing Events">
+    If certain events aren't being received:
+1. Verify that you've selected those specific event types in GitHub's webhook configuration
+2. Check GitHub's webhook delivery logs (in the webhook settings) to confirm they're being sent
+3. Ensure your HookFlo webhook is active and properly configured
+  </Accordion>
+  <Accordion title="Webhook Delivery Failures">
+    If GitHub reports delivery failures:
+1. Check GitHub's webhook logs for specific error messages
+2. Verify that your HookFlo endpoint is accessible from the internet
+3. Ensure the webhook URL is entered correctly with the proper protocol (https://)
+  </Accordion>
+</AccordionGroup>
+
+## Example: Alerting on Pull Request Reviews
+
+Here's a complete example of setting up HookFlo to alert your team when pull requests are reviewed:
+
+<Steps>
+  <Step title="Configure the Events in GitHub">
+    In your GitHub webhook settings, ensure the `pull_request_review` event is selected.
+  </Step>
+  <Step title="Create an Alert Rule in HookFlo">
+    In HookFlo:
+    1. Go to **Alert Rules** > **Create Rule**
+    2. Select your GitHub webhook as the source
+    3. Add conditions:
+       - `headers.x-github-event equals pull_request_review`
+       - `action equals submitted`
+    4. Select your notification channel (e.g., Slack)
+    5. Customize the message: 
+       ```
+       📝 New PR Review by {{review.user.login}}
+       Status: {{review.state}}
+       PR: {{pull_request.title}}
+       Repository: {{repository.full_name}}
+       Link: {{pull_request.html_url}}
+       {{#if review.body}}
+       Comment: {{review.body}}
+       {{/if}}
+       ```
+    6. Save the rule
+  </Step>
+  <Step title="Test the Integration">
+    Create a pull request in your repository and submit a review, then verify that you receive the notification in your selected channel.
+  </Step>
+</Steps>
+
+## Security Considerations
+
+When working with GitHub webhooks, keep these security practices in mind:
+
+- Use webhook secrets: Always configure a webhook secret to verify authenticity
+- Protect sensitive repositories: Be careful about setting up webhooks on repositories with sensitive code
+- Limit event selection: Only subscribe to the events you actually need
+- Monitor for unusual activity: Watch for unexpected webhook deliveries
+- Restrict access to webhook settings: Limit who can view and modify your webhooks
+
+## Next Steps
+
+- Configure Slack notifications for your GitHub events
+- Set up Email alerts for critical repository events
+- Explore Security best practices for webhook integrations
+- Check out the GitHub webhooks documentation for advanced configurations

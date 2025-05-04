@@ -1,0 +1,215 @@
+---
+title: "Clerk Integration"
+description: "Set up webhooks to receive notifications for user authentication events from Clerk"
+---
+
+# Clerk Integration
+
+This guide will walk you through setting up a webhook integration between Clerk and HookFlo, enabling you to receive alerts for user authentication and management events.
+
+<Note>
+  Clerk uses [Svix](https://www.svix.com/) to manage their webhook infrastructure, so the webhooks will include Svix-specific headers that HookFlo will validate.
+</Note>
+
+## Prerequisites
+
+- A HookFlo account with an active project
+- A Clerk account with admin access to your application
+- Basic understanding of Clerk's authentication system
+
+## Integration Steps
+
+<Steps>
+  <Step title="Create a Webhook in HookFlo">
+    <Accordion title="Setting Up Your Webhook Endpoint">
+      1. Log in to your HookFlo dashboard
+      2. Navigate to **Integrations** > **Webhook Platforms**
+      3. Click on **+ Add New** and select **Clerk**
+      4. A unique webhook URL will be generated
+      5. Enter your Clerk webhook signing secret (you'll get this from Clerk in the next step)
+      6. Click **Save Configuration**
+      
+      ![Clerk Integration Setup](/images/clerk-integration.png)
+      
+      Keep this page open as you'll need the webhook URL for the next step.
+    </Accordion>
+  </Step>
+
+  <Step title="Create a Webhook Endpoint in Clerk">
+    <Accordion title="Configuring Clerk to Send Webhooks">
+      1. Log in to your [Clerk Dashboard](https://dashboard.clerk.dev/)
+      2. Select your application
+      3. Navigate to **Webhooks** in the left sidebar
+      4. Click **Add Endpoint**
+      5. Enter your HookFlo webhook URL from the previous step
+      6. Under **Message filtering**, select the events you want to monitor (see supported events below)
+      7. Click **Create**
+      8. After creation, find your **Signing Secret** in the webhook details page
+      9. Copy this signing secret and paste it back in your HookFlo Clerk integration configuration
+      
+      ![Clerk Webhook Configuration](/images/clerk-webhook-setup.png)
+    </Accordion>
+  </Step>
+
+  <Step title="Configure Verification in HookFlo">
+    <Accordion title="Setting Up Webhook Verification">
+      1. Return to the HookFlo dashboard
+      2. Paste the signing secret from Clerk into the "Signing Secret" field
+      3. Click **Save Configuration**
+      
+      This secret allows HookFlo to verify that incoming webhooks are genuinely from Clerk, preventing spoofing attacks.
+    </Accordion>
+  </Step>
+
+  <Step title="Test Your Integration">
+    <Accordion title="Verifying the Setup">
+      To test that your webhook is working correctly:
+      1. In the Clerk dashboard, find your webhook endpoint and click **Send test event**
+      2. Select an event type (e.g., `user.created`)
+      3. Click **Send test** to deliver a sample webhook to HookFlo
+      4. Go to your HookFlo dashboard and check the **Event Logs** section
+      5. You should see the test event appear with details
+      
+      You can also test with a real event by creating a new user in your Clerk application.
+    </Accordion>
+  </Step>
+</Steps>
+
+## Supported Events
+
+Clerk supports a wide range of webhook events. Here are the most commonly used categories:
+
+### User Events
+
+- `user.created`: When a new user is created
+- `user.updated`: When user details are changed
+- `user.deleted`: When a user is deleted
+- `user.locked`: When a user account is locked
+
+### Session Events
+
+- `session.created`: When a user signs in
+- `session.removed`: When a user signs out
+- `session.ended`: When a session expires
+
+### Authentication Events
+
+- `emailAddress.created`: When an email address is added
+- `emailAddress.verified`: When an email is verified
+- `phoneNumber.created`: When a phone number is added
+- `phoneNumber.verified`: When a phone is verified
+- `password.created`: When a password is set
+- `password.reset`: When a password is reset
+
+### Organization Events
+
+- `organization.created`: When a new organization is created
+- `organization.updated`: When an organization is updated
+- `organization.deleted`: When an organization is deleted
+- `organizationMembership.created`: When a user joins an organization
+- `organizationMembership.deleted`: When a user leaves an organization
+
+For a complete list of events, refer to the [Clerk Webhook Events documentation](https://clerk.com/docs/webhooks/overview).
+
+## Webhook Headers
+
+Clerk webhooks include these important headers that HookFlo uses for verification:
+
+- `svix-id`: A unique identifier for the webhook event
+- `svix-timestamp`: When the webhook was sent
+- `svix-signature`: A signature that proves the webhook came from Clerk
+
+## Webhook Payload Structure
+
+Here's an example of what the webhook payload looks like for a `user.created` event:
+
+```json
+{
+  "data": {
+    "id": "user_2NZrMxLQOI49IM9xmLMBB6yrY7L",
+    "first_name": "John",
+    "last_name": "Doe",
+    "email_addresses": [
+      {
+        "id": "idn_2NZrMxWEDc8XVtCyD6ULe9YNdGX",
+        "email_address": "john@example.com",
+        "verification": {
+          "status": "verified",
+          "strategy": "email_code"
+        }
+      }
+    ],
+    "created_at": 1645131680,
+    "updated_at": 1645131680
+  },
+  "object": "event",
+  "type": "user.created"
+}
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Webhook Verification Failures">
+    If you're seeing webhook verification errors:
+    1. Double-check that you've entered the correct signing secret in HookFlo
+    2. Ensure the secret is from the same endpoint where you configured the HookFlo URL
+    3. Check if the signing secret has been rotated in Clerk recently
+  </Accordion>
+  <Accordion title="Missing Events">
+    If certain events aren't being received:
+    1. Verify that you've selected those specific event types in Clerk's webhook configuration
+    2. Check Clerk's webhook delivery logs to confirm they're being sent
+    3. Ensure your HookFlo webhook is active and properly configured
+  </Accordion>
+  <Accordion title="Webhook Timeouts">
+    If webhook deliveries are timing out:
+    1. Check Clerk's webhook logs for timeout errors
+    2. Consider implementing webhook retries in Clerk's settings
+    3. Contact HookFlo support if the issue persists
+  </Accordion>
+</AccordionGroup>
+
+## Example: Alerting on New User Signups
+
+Here's a complete example of setting up HookFlo to alert your team when new users sign up:
+
+<Steps>
+  <Step title="Configure the Events in Clerk">
+    In your Clerk webhook settings, ensure the `user.created` event is selected.
+  </Step>
+  <Step title="Create an Alert Rule in HookFlo">
+    In HookFlo:
+    1. Go to **Alert Rules** > **Create Rule**
+    2. Select your Clerk webhook as the source
+    3. Add a condition: `type equals user.created`
+    4. Select your notification channel (e.g., Slack)
+    5. Customize the message: 
+       ```
+       New user signup: {{data.email_addresses[0].email_address}}
+       Name: {{data.first_name}} {{data.last_name}}
+       User ID: {{data.id}}
+       Time: {{data.created_at | date}}
+       ```
+    6. Save the rule
+  </Step>
+  <Step title="Test the Integration">
+    Create a new user in your Clerk application and verify that you receive the notification in your selected channel.
+  </Step>
+</Steps>
+
+## Security Considerations
+
+When working with Clerk webhooks, keep these security practices in mind:
+
+- Protect your signing secret: Never expose the Clerk signing secret in client-side code
+- Validate all webhooks: Always verify the signature of incoming webhooks
+- Monitor webhook activity: Regularly review webhook events for suspicious patterns
+- Limit data exposure: Only send required user data in your notification templates
+
+## Next Steps
+
+- Configure Slack notifications for your Clerk events
+- Set up Email alerts for critical authentication events
+- Explore Security best practices for webhook integrations
+- Check out the Clerk webhook documentation for advanced configurations

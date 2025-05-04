@@ -1,82 +1,103 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Hookflo Docs",
-  "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
-  },
-  "favicon": "/favicon.svg",
-  "navigation": {
-    "tabs": [
-      {
-        "tab": "Guides",
-        "groups": [
+    "$schema": "https://mintlify.com/docs.json",
+    "theme": "mint",
+    "name": "Hookflo Docs",
+    "colors": {
+      "primary": "#16A34A",
+      "light": "#07C983",
+      "dark": "#15803D"
+    },
+    "favicon": "/favicon.svg",
+    "navigation": {
+      "tabs": [
+        {
+          "tab": "Guides",
+          "groups": [
+            {
+              "group": "Get Started",
+              "pages": [
+                "introduction",
+                "getting-started/quickstart",
+                "getting-started/authentication",
+                "getting-started/security"
+              ]
+            },
+            {
+              "group": "Platforms",
+              "pages": [
+                 "webhook-platforms/overview",
+        "webhook-platforms/supabase",
+        "webhook-platforms/clerk",
+        "webhook-platforms/stripe",
+        "webhook-platforms/github"
+
+              ]
+            },
+                 {
+              "group": "Notification Channels",
+              "pages": [
+                "notification-channels/overview",
+                "notification-channels/slack",
+                "notification-channels/email"
+              ]
+            },
+               {
+              "group": "Dashboard",
+              "pages": [
+                "dashboard/overview"
+              ]
+            },
+            {
+              "group": "Security",
+              "pages": [
+                "security/best-practices"
+              ]
+            }
+          ]
+        }
+      ],
+      "global": {
+        "anchors": [
           {
-            "group": "Get Started",
-            "pages": [
-              "introduction",
-              "quickstart",
-              "development"
-            ]
+            "anchor": "Documentation",
+            "href": "https://mintlify.com/docs",
+            "icon": "book-open-cover"
           },
           {
-            "group": "Essentials",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
-            ]
+            "anchor": "Community",
+            "href": "https://mintlify.com/community",
+            "icon": "slack"
+          },
+          {
+            "anchor": "Blog",
+            "href": "https://mintlify.com/blog",
+            "icon": "newspaper"
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
+    },
+    "logo": {
+      "light": "/logo/light.svg",
+      "dark": "/logo/dark.svg"
+    },
+    "navbar": {
+      "links": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "label": "Support",
+          "href": "mailto:team.hookflo@gmail.com"
         }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:team.hookflo@gmail.com"
+      ],
+      "primary": {
+        "type": "button",
+        "label": "Dashboard",
+        "href": "https://hookflo.com/dashboard/webhooks"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://hookflo.com/dashboard/webhooks"
-    }
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+    },
+    "footer": {
+      "socials": {
+        "x": "https://x.com/mintlify",
+        "github": "https://github.com/mintlify",
+        "linkedin": "https://linkedin.com/company/mintlify"
+      }
     }
   }
-}

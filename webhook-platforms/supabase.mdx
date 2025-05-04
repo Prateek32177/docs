@@ -1,0 +1,262 @@
+---
+title: "Supabase Integration"
+description: "Connect HookFlo with Supabase to receive alerts for database and authentication events"
+mode: "wide"
+---
+
+# Supabase Integration
+
+This guide will help you set up a webhook integration between Supabase and HookFlo, allowing you to receive alerts when database changes, authentication events, and other activities occur in your Supabase project.
+
+<Note>
+  Supabase uses a combination of database triggers and Postgres functions to deliver webhook events. This integration works with both Supabase's built-in webhooks and custom webhook implementations.
+</Note>
+
+## Prerequisites
+
+- A HookFlo account with an active project
+- A Supabase project with admin access
+- Basic understanding of Supabase database and functions
+
+## Integration Steps
+
+<Steps>
+  <Step title="Create a Webhook in HookFlo">
+    <Accordion title="Creating Your Webhook Endpoint">
+      1. Log in to your HookFlo dashboard
+      2. Navigate to **Integrations** \> **Webhook Platforms**
+      3. Click on **\+ Add New** and select **Supabase**
+      4. A unique webhook URL and security credentials will be generated
+      5. Copy the following values for later use:
+         - Webhook URL
+         - x-webhook-id
+         - x-webhook-token
+
+      ![Supabase Integration Setup](/images/supabase-integration.png)
+    </Accordion>
+  </Step>
+  <Step title="Configure Supabase Database Webhook">
+    <Accordion title="Using Database Webhooks">
+      You can set up Supabase webhooks using either the Dashboard UI or SQL.
+
+      ### Option A: Using Supabase Dashboard
+
+      1. Log in to your Supabase dashboard
+      2. Navigate to **Database** \> **Webhooks**
+      3. Click **Create a new webhook**
+      4. Fill in the following details:
+         - **Name**: Give your webhook a descriptive name (e.g., `hookflo-users-events`)
+         - **Table**: Select the table you want to monitor
+         - **Events**: Choose which events to trigger the webhook (INSERT, UPDATE, DELETE)
+         - **URL**: Paste your HookFlo webhook URL
+         - **HTTP Headers**: Add the following headers:
+           - `x-webhook-id`: [Your webhook ID from HookFlo]
+           - `x-webhook-token`: [Your webhook token from HookFlo]
+      5. Click **Save**
+
+      ### Option B: Using SQL
+
+      You can also set up webhooks directly with SQL in the Supabase SQL editor:
+
+      ```sql
+      -- Create a function that will trigger the webhook
+      create or replace function public.handle_webhook_event()
+      returns trigger as $$
+      declare
+        webhook_url text := 'https://api.hookflo.dev/webhook/supabase/[your-webhook-id]';
+      begin
+        perform net.http_post(
+          webhook_url,
+          json_build_object(
+            'table', TG_TABLE_NAME,
+            'schema', TG_TABLE_SCHEMA,
+            'event', TG_OP,
+            'record', case when TG_OP = 'DELETE' then old else new end,
+            'old_record', case when TG_OP = 'UPDATE' then old else null end
+          )::text,
+          'application/json',
+          array[
+            ('x-webhook-id', '[Your webhook ID from HookFlo]'),
+            ('x-webhook-token', '[Your webhook token from HookFlo]')
+          ]
+        );
+        return new;
+      end;
+      $$ language plpgsql security definer;
+      
+      -- Create a trigger on your table
+      create trigger on_users_changed
+        after insert or update or delete on public.users
+        for each row execute procedure public.handle_webhook_event();
+      ```
+
+      Replace `public.users` with your table name and adjust for the events you want to track.
+    </Accordion>
+  </Step>
+  <Step title="Enable Postgres HTTP Extension">
+    <Accordion title="Required Extensions">
+      For the webhook function to work, you need to enable the `http` extension in Supabase:
+
+      ```sql
+      create extension if not exists http with schema extensions;
+      ```
+
+      For Supabase projects created after December 2022, this extension is likely already enabled.
+    </Accordion>
+  </Step>
+  <Step title="Set Up Authentication Webhooks">
+    <Accordion title="Monitoring Auth Events">
+      To monitor authentication events (signups, logins, password resets, etc.):
+
+      1. In Supabase, go to **Authentication** \> **Webhooks**
+      2. Click **Add webhook**
+      3. Select the events you want to monitor
+      4. Add your HookFlo webhook URL
+      5. Add the required HTTP headers:
+         - `x-webhook-id`: [Your webhook ID from HookFlo]
+         - `x-webhook-token`: [Your webhook token from HookFlo]
+      6. Save the webhook configuration
+    </Accordion>
+  </Step>
+  <Step title="Test Your Integration">
+    <Accordion title="Verifying the Setup">
+      To test that your webhook is working correctly:
+
+      1. Make a change to the monitored table (insert, update, or delete a record)
+      2. Go to your HookFlo dashboard and check the **Event Logs** section
+      3. You should see the event appear with details about the database change
+      4. If you've set up notification channels, you should receive the alert
+
+      If you don't see the event in HookFlo, check:
+
+      - Supabase webhook logs in your project dashboard
+      - That the correct HTTP headers are being sent
+      - Your database triggers are properly configured
+    </Accordion>
+  </Step>
+</Steps>
+
+## Supported Events
+
+Supabase can send webhooks for the following types of events:
+
+### Database Events
+
+- **INSERT**: When records are created
+- **UPDATE**: When records are modified
+- **DELETE**: When records are removed
+
+### Authentication Events
+
+- **SIGNED_UP**: When a new user signs up
+- **SIGNED_IN**: When a user signs in
+- **SIGNED_OUT**: When a user signs out
+- **PASSWORD_RECOVERY**: When a password reset is requested
+- **TOKEN_REFRESHED**: When an auth token is refreshed
+- **USER_DELETED**: When a user account is deleted
+
+## Webhook Payload Structure
+
+Here's an example of what the webhook payload looks like for a database event:
+
+```json
+{
+  "table": "users",
+  "schema": "public",
+  "event": "INSERT",
+  "record": {
+    "id": "d9be2f69-5d13-4ac3-8f77-1193e9b1bfe3",
+    "email": "user@example.com",
+    "created_at": "2023-04-01T12:00:00Z"
+  },
+  "old_record": null
+}
+```
+
+And for an authentication event:
+
+```json
+{
+  "event": "SIGNED_UP",
+  "instance": "your-project-ref",
+  "timestamp": "2023-04-01T12:00:00Z",
+  "user": {
+    "id": "d9be2f69-5d13-4ac3-8f77-1193e9b1bfe3",
+    "email": "user@example.com"
+  }
+}
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Webhook Not Firing">
+    If your webhook isn't sending events to HookFlo:
+
+    1. Check that the `http` extension is enabled in your Supabase project
+    2. Verify that your trigger is correctly set up on the table
+    3. Check the Supabase logs for any errors related to the webhook function
+    4. Ensure the webhook URL and headers are correctly configured
+  </Accordion>
+  <Accordion title="Events Received but Not Processing">
+    If HookFlo is receiving events but not processing them correctly:
+
+    1. Verify that the `x-webhook-id` and `x-webhook-token` headers are being sent correctly
+    2. Check that your alert rules in HookFlo are properly configured
+    3. Test with a simple alert rule to isolate the issue
+  </Accordion>
+  <Accordion title="Performance Considerations">
+    For tables with high-frequency changes:
+
+    1. Consider adding conditions to your triggers to only fire on specific records
+    2. Implement rate limiting in your webhook function
+    3. Use batch processing for high-volume tables
+  </Accordion>
+</AccordionGroup>
+
+## Example: Monitoring New User Signups
+
+Here's a complete example of setting up HookFlo to alert your team when new users sign up:
+
+<Steps>
+  <Step title="Create the Webhook in HookFlo">
+    Follow the steps above to create a Supabase webhook in HookFlo.
+  </Step>
+  <Step title="Configure the Auth Webhook in Supabase">
+    In your Supabase dashboard, set up an auth webhook that only triggers on the SIGNED_UP event.
+  </Step>
+  <Step title="Create an Alert Rule in HookFlo">
+    In HookFlo:
+
+    1. Go to **Alert Rules** \> **Create Rule**
+    2. Select your Supabase webhook as the source
+    3. Add a condition: `event equals SIGNED_UP`
+    4. Select your notification channel (e.g., Slack)
+    5. Customize the message:
+
+       ```
+       New user signup: {{user.email}}
+       User ID: {{user.id}}
+       Time: {{timestamp}}
+       ```
+    6. Save the rule
+  </Step>
+  <Step title="Test the Integration">
+    Create a new user account in your Supabase app and verify that you receive the notification in your selected channel.
+  </Step>
+</Steps>
+
+## Security Considerations
+
+Supabase webhooks transmit potentially sensitive data. To keep your integration secure:
+
+- Never expose your webhook token: Keep the x-webhook-token value secure
+- Use row-level security: Limit what data can be included in webhook payloads
+- Consider data minimization: Only send the fields you actually need
+- Audit your triggers regularly: Remove webhooks from tables that no longer need monitoring
+
+## Next Steps
+
+- Configure Slack notifications for your Supabase events
+- Set up Email alerts for critical database changes
+- Learn about security best practices for webhook integrations

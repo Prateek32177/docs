@@ -1,0 +1,88 @@
+---
+title: "Webhook Platform Integrations"
+description: "Overview of supported webhook platforms and integration options"
+---
+
+# Webhook Platform Integrations
+
+HookFlo supports webhook integrations with a variety of popular platforms. This page provides an overview of all supported platforms and links to detailed integration guides.
+
+## Supported Platforms
+
+<CardGroup cols={2}>
+  <Card
+    title="Supabase"
+    icon="database"
+    href="/webhook-platforms/supabase"
+  >
+    Database events, authentication, and realtime notifications
+  </Card>
+  <Card
+    title="Clerk"
+    icon="user"
+    href="/webhook-platforms/clerk"
+  >
+    User authentication and management events
+  </Card>
+  <Card
+    title="Stripe"
+    icon="credit-card"
+    href="/webhook-platforms/stripe"
+  >
+    Payment processing, subscription management, and billing events
+  </Card>
+  <Card
+    title="GitHub"
+    icon="github"
+    href="/webhook-platforms/github"
+  >
+    Repository events, issues, pull requests, and more
+  </Card>
+</CardGroup>
+
+## Common Integration Steps
+
+While each platform has its own specific setup requirements, most integrations follow these general steps:
+
+1. **Generate a webhook URL in HookFlo**: Create a new webhook endpoint in your HookFlo dashboard
+2. **Configure security credentials**: Set up authentication for secure webhook communication
+3. **Select events to monitor**: Choose which events should trigger notifications
+4. **Add the webhook URL to the platform**: Configure the platform to send events to your HookFlo endpoint
+5. **Test the integration**: Trigger a test event to verify the setup
+
+## Event Processing
+
+When an event is received from any platform, HookFlo:
+
+1. **Verifies the webhook**: Authenticates the request using platform-specific verification methods
+2. **Parses the payload**: Extracts relevant information from the webhook data
+3. **Matches alert rules**: Determines which notification rules apply to this event
+4. **Delivers notifications**: Sends alerts to the configured channels
+
+## Security Considerations
+
+All webhook integrations in HookFlo employ platform-specific security measures including:
+
+- **Signature verification**: Validating that webhooks are genuinely from the claimed source
+- **Secret management**: Secure storage of webhook secrets and tokens
+- **HTTPS only**: All webhook URLs use encrypted connections
+- **Request validation**: Checking timestamp, content, and format of incoming webhooks
+
+For more details on securing your webhook integrations, see our [Security Best Practices](/security/best-practices) guide.
+
+## Custom Platforms
+
+If you need to integrate with a platform that isn't listed here, you can use our [generic webhook](/webhook-platforms/generic) option which provides a flexible endpoint that can accept webhooks from any source.
+
+## Coming Soon
+
+We're constantly expanding our platform integrations. Here are some platforms we plan to support in the near future:
+
+- Vercel
+- AWS EventBridge
+- Twilio
+- SendGrid
+- Linear
+- MongoDB Atlas
+
+Have a platform you'd like us to support? [Let us know](mailto:support@hookflo.dev)!

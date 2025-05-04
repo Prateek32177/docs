@@ -1,0 +1,113 @@
+---
+title: "Notification Channels Overview"
+description: "Learn about the different ways HookFlo can deliver alerts to your team"
+---
+
+# Notification Channels Overview
+
+Notification channels are the destinations where HookFlo sends alerts when webhook events are received. This page provides an overview of available notification channels and how to configure them.
+
+## Available Channels
+
+<CardGroup cols={2}>
+  <Card
+    title="Slack"
+    icon="slack"
+    href="/notification-channels/slack"
+  >
+    Send rich, interactive alerts to Slack channels or direct messages
+  </Card>
+  <Card
+    title="Email"
+    icon="envelope"
+    href="/notification-channels/email"
+  >
+    Deliver detailed notifications to individual or group email addresses
+  </Card>
+</CardGroup>
+
+## Coming Soon
+
+We're actively working on adding more notification channels:
+
+- Microsoft Teams
+- Discord
+- SMS via Twilio
+- Push notifications
+- Webhook forwarding
+- PagerDuty
+
+## Channel Configuration
+
+Each notification channel type requires specific configuration:
+
+<AccordionGroup>
+  <Accordion title="Slack Configuration">
+    Slack notifications require:
+    - OAuth integration with your Slack workspace
+    - Channel selection for delivering messages
+    - Message formatting preferences
+  </Accordion>
+  
+  <Accordion title="Email Configuration">
+    Email notifications require:
+    - Recipient email addresses
+    - Email subject template
+    - HTML and text content templates
+  </Accordion>
+</AccordionGroup>
+
+## Key Features
+
+### Message Templating
+
+All notification channels support customizable message templates:
+
+- **Template variables**: Insert dynamic content from webhook payloads
+- **Conditional sections**: Show parts of the message only when certain conditions are met
+- **Markdown support**: Format your messages with rich text
+- **Preview capability**: Test your templates before saving
+
+### Filtering & Routing
+
+Control exactly when and where notifications are sent:
+
+- **Event filtering**: Send notifications only for specific event types
+- **Content-based rules**: Apply conditions based on the webhook payload content
+- **Channel routing**: Send different types of events to different channels
+- **Priority levels**: Set importance levels for different types of alerts
+
+### Scheduled Digests
+
+Instead of receiving individual notifications, you can configure digest summaries:
+
+- **Hourly digests**: Collect and summarize events from the past hour
+- **Daily reports**: Get a daily summary of all events
+- **Weekly summaries**: Receive a weekly rollup of activity
+
+## Best Practices
+
+<Steps>
+  <Step title="Start with Critical Alerts">
+    Begin by setting up notifications for the most important events, then expand as needed.
+  </Step>
+  
+  <Step title="Use Clear Naming">
+    Give your notification channels descriptive names that indicate their purpose.
+  </Step>
+  
+  <Step title="Test Your Templates">
+    Always use the preview function to test how your messages will appear before activating them.
+  </Step>
+  
+  <Step title="Avoid Alert Fatigue">
+    Be selective about which events trigger notifications to prevent overwhelming your team.
+  </Step>
+</Steps>
+
+## Next Steps
+
+- [Set up Slack notifications](/notification-channels/slack)
+- [Configure email alerts](/notification-channels/email)
+- Learn how to [create custom alert templates](/notification-channels/templates)
+- Explore [alert routing strategies](/notification-channels/routing)

@@ -1,0 +1,208 @@
+---
+title: "Slack Integration"
+description: "Set up Slack as a notification channel for your webhook alerts"
+---
+
+# Slack Notifications
+
+This guide will help you set up Slack as a notification channel in HookFlo, allowing you to receive real-time alerts in your team's Slack workspace when webhook events are triggered.
+
+<Note>
+  HookFlo uses Slack's OAuth integration to securely connect with your workspace. This allows for rich, interactive messages with customizable formats.
+</Note>
+
+## Prerequisites
+
+- A HookFlo account with an active project
+- Admin access to a Slack workspace
+- At least one webhook platform already configured in HookFlo
+
+## Integration Steps
+
+<Steps>
+  <Step title="Connect Your Slack Workspace">
+    <Accordion title="Authorizing HookFlo">
+      1. Log in to your HookFlo dashboard
+      2. Navigate to **Notification Channels** > **Add Channel**
+      3. Select **Slack** from the available channels
+      4. Click **Connect to Slack**
+      5. You'll be redirected to Slack's authorization page
+      6. Select your workspace and authorize HookFlo with the requested permissions
+      7. After authorization, you'll be redirected back to HookFlo
+      
+      ![Slack Authorization](/images/slack-authorization.png)
+    </Accordion>
+  </Step>
+
+  <Step title="Configure Channel Settings">
+    <Accordion title="Basic Configuration">
+      1. After connecting your workspace, you'll need to configure the notification settings:
+      2. **Channel Name**: Give this notification channel a descriptive name (e.g., "Product Team Alerts")
+      3. **Default Slack Channel**: Select which Slack channel should receive notifications
+      4. **Message Format**: Choose between Simple, Detailed, or Custom formats
+      5. **Notification Icon**: Optionally customize the bot icon that appears with messages
+      6. **Default Username**: Set the display name for the notification bot
+      
+      ![Slack Configuration](/images/slack-config.png)
+    </Accordion>
+  </Step>
+
+  <Step title="Customize Message Templates">
+    <Accordion title="Message Formatting">
+      HookFlo offers three options for formatting Slack messages:
+      
+      1. **Simple**: Brief notification with essential information only
+      2. **Detailed**: Comprehensive message with expanded data fields
+      3. **Custom**: Create your own template using Slack's Block Kit format
+      
+      For custom templates, you can use our template editor with variables from your webhook payload:
+      
+      ```json
+      [
+        {
+          "type": "header",
+          "text": {
+            "type": "plain_text",
+            "text": "New {{event_type}} Event"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "*ID:* {{id}}\n*Time:* {{timestamp}}"
+          }
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "{{message}}"
+          }
+        }
+      ]
+      ```
+      
+      Use the **Preview** button to see how your messages will appear before saving.
+    </Accordion>
+  </Step>
+
+  <Step title="Test Your Integration">
+    <Accordion title="Verifying the Setup">
+      To test that your Slack notifications are working correctly:
+
+      1. In the channel configuration page, click **Send Test Message**
+      2. Select which webhook payload to use for the test (or use a sample)
+      3. The test message will be sent to your configured Slack channel
+      4. Verify that the message appears as expected
+      
+      You can also trigger a real webhook event from one of your connected platforms and confirm that it appears in Slack.
+    </Accordion>
+  </Step>
+</Steps>
+
+## Advanced Features
+
+### Channel Routing
+
+You can send different types of events to different Slack channels:
+
+<Accordion title="Channel Routing Configuration">
+  1. In your alert rule, override the default channel for specific events
+  2. Create multiple Slack notification channels with different default destinations
+  3. Use dynamic routing with template variables: `#{{team}}-alerts`
+</Accordion>
+
+### Interactive Components
+
+Make your Slack notifications actionable with interactive elements:
+
+<Accordion title="Adding Interactivity">
+  For custom templates, you can add interactive elements like buttons:
+  
+  ```json
+  {
+    "type": "actions",
+    "elements": [
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "View Details"
+        },
+        "url": "{{details_url}}"
+      },
+      {
+        "type": "button",
+        "text": {
+          "type": "plain_text",
+          "text": "Acknowledge"
+        },
+        "value": "acknowledge",
+        "action_id": "acknowledge_alert"
+      }
+    ]
+  }
+  ```
+
+  Note: Interactive components require additional setup in your Slack app configuration.
+</Accordion>
+
+### Conditional Notifications
+
+Send notifications only when certain conditions are met:
+
+<Accordion title="Condition-Based Alerts">
+  In your alert rules, you can add conditions like:
+
+  - Send to Slack only when `severity` is `high` or `critical`
+  - Route to different channels based on `event.category`
+  - Only send notifications during business hours
+</Accordion>
+
+## Message Formatting Guide
+
+Slack messages in HookFlo support rich formatting using Slack's markdown-like syntax:
+
+<Accordion title="Text Formatting">
+```
+*bold*
+_italic_
+~strikethrough~
+`code`
+```code block```
+> blockquote
+• Bullet list
+1. Numbered list
+<https://example.com|Link with custom text>
+```
+</Accordion>
+
+<Accordion title="Mentions">
+You can mention users, channels, or everyone:
+
+```
+@username
+#channel
+@here
+@channel
+@everyone
+```
+
+You can also use dynamic mentions with variables:
+
+```
+<@{{event.assigned_to}}>
+```
+</Accordion>
+
+<Accordion title="Emojis">
+Add emojis to make your notifications more expressive:
+
+```
+:tada: New feature released!
+:warning: Alert triggered
+:red_circle: Critical error
+:large_green_circle: All systems operational
+```
+</Accordion>
