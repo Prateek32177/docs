@@ -1,5 +1,5 @@
 ---
-title: "Supabase Integration"
+title: "Supabase"
 description: "Connect HookFlo with Supabase to receive alerts for database and authentication events"
 ---
 
@@ -7,7 +7,9 @@ description: "Connect HookFlo with Supabase to receive alerts for database and a
 
 This guide will help you set up a webhook integration between Supabase and HookFlo, allowing you to receive real-time alerts when database changes, authentication events, and other activities occur in your Supabase project.
 
-![Supabase Integration Banner](/supabase-logo-wordmark--dark.png)
+<Frame>
+  <img src="/supabase-logo-wordmark--dark.png" style={{ borderRadius: '0.5rem' }} />
+</Frame>
 
 <Note>
   Supabase uses a combination of database triggers and Postgres functions to deliver webhook events. HookFlo seamlessly integrates with both Supabase's built-in webhooks and custom webhook implementations.
@@ -42,7 +44,7 @@ After logging into HookFlo, follow these steps to create and configure your Supa
       Once created, you'll see your webhook in manage webhooks table.
 
       <div className="w-full">
-      ![Create Webhook Screen](/create-webhook-hookflo.png)
+      ![Create Webhook Screen](/images/supabase/create-webhook-hookflo.png)
       </div>
 
     </Accordion>
@@ -59,7 +61,7 @@ After logging into HookFlo, follow these steps to create and configure your Supa
       Email notifications are perfect for critical alerts that require immediate attention and have lower usage limits, Use it for critical Alerts.
 
       <div className="w-full">
-      ![Email Configuration Dialog](/email-configuration.png)
+      ![Email Configuration Dialog](/images/supabase/email-configuration.png)
       </div>
     </Accordion>
     <Accordion title="Configure Slack Notifications">
@@ -74,7 +76,7 @@ After logging into HookFlo, follow these steps to create and configure your Supa
       Slack notifications are ideal for team collaboration and awareness, Highly recommended to use Slack and this has 3x Usage limits than email.
 
       <div className="w-full">
-      ![Slack Configuration Dialog](/slack-configuration.png)
+      ![Slack Configuration Dialog](/images/supabase/slack-configuration.png)
       </div>
     </Accordion>
   </Step>
@@ -91,7 +93,7 @@ After logging into HookFlo, follow these steps to create and configure your Supa
       You can also configure notification channels from this panel if you haven't done so already.
 
       <div className="w-full">
-      ![Connection Configuration Panel](/configure-application.png)
+      ![Connection Configuration Panel](/images/supabase/configure-application.png)
       </div>
 
     </Accordion>
@@ -114,7 +116,7 @@ Now that your HookFlo webhook is set up, you need to configure Supabase to send 
       This is where you'll create database webhooks that trigger on table events.
       
       <div className="w-full">
-      ![Supabase Dashboard Navigation](/choose-database-webhooks.png)
+      ![Supabase Dashboard Navigation](/images/supabase/choose-database-webhooks.png)
       </div>
 
     </Accordion>
@@ -136,11 +138,11 @@ Now that your HookFlo webhook is set up, you need to configure Supabase to send 
       8. Click **Save** to create the webhook
 
       <div className="w-full">
-      ![Create Database Webhook Form](/create-webhook.png)
+      ![Create Database Webhook Form](/images/supabase/create-webhook.png)
       </div>
 
       <div className="w-full">
-      ![Create Database Webhook Form](/configure-secret-url-values.png)
+      ![Create Database Webhook Form](/images/supabase/configure-secret-url-values.png)
       </div>
 
     </Accordion>
