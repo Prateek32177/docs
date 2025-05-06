@@ -1,5 +1,440 @@
 ---
-title: 'New file'
-description: 'Description of your new file.'
+title: "Security Overview"
+description: "Learn about HookFlo's comprehensive security features and algorithm-agnostic payload processing"
 ---
 
+# Security Overview
+
+HookFlo is built with security as a fundamental principle. This guide outlines our approach to securing webhook communication, protecting sensitive data, and ensuring the integrity of all webhook events processed through our platform.
+
+<Note>
+  Security is a shared responsibility. While HookFlo provides robust security features, it's important to follow best practices when configuring your webhooks and handling sensitive data.
+</Note>
+
+## Core Security Features
+
+### Webhook Authentication & Verification
+
+HookFlo supports multiple methods for authenticating and verifying webhook sources:
+
+<CardGroup cols={2}>
+  <Card title="HMAC Signature Verification" icon="shield-check">
+    Verify the authenticity of webhooks using HMAC signatures with algorithms like SHA-256
+  </Card>
+  <Card title="JWT Validation" icon="key">
+    Validate JSON Web Tokens using various signing algorithms
+  </Card>
+  <Card title="API Keys" icon="lock">
+    Implement simple key-based authentication for webhook sources
+  </Card>
+  <Card title="Basic Authentication" icon="user-lock">
+    Support for username/password verification methods
+  </Card>
+</CardGroup>
+
+<CodeGroup>
+
+```json HMAC Configuration
+{
+  "verification": {
+    "type": "hmac",
+    "algorithm": "sha256",
+    "signatureHeader": "X-Hub-Signature-256",
+    "signaturePrefix": "sha256=",
+    "secret": "${WEBHOOK_SECRET}"
+  }
+}
+```
+
+
+```json JWT Configuration
+{
+  "verification": {
+    "type": "jwt",
+    "algorithm": "RS256",
+    "secret": "${JWT_PUBLIC_KEY}",
+    "claimValidation": {
+      "iss": "api.service.com",
+      "aud": "hookflo"
+    }
+  }
+}
+```
+
+</CodeGroup>
+
+HookFlo verifies signatures using the exact algorithm specified by the webhook provider, ensuring compatibility with any service.
+
+### Encryption
+
+<Tabs>
+  <Tab title="Transport Encryption">
+    All API requests use TLS 1.2\+ to encrypt data in transit between systems. HookFlo regularly updates its TLS configuration to follow security best practices and disable deprecated protocols or cipher suites.
+  </Tab>
+  <Tab title="Storage Encryption">
+    All stored webhook data is encrypted using AES-256. Our database encryption ensures that your webhook payloads, configurations, and secrets remain protected even in the unlikely event of unauthorized access to the underlying storage.
+  </Tab>
+  <Tab title="Secret Management">
+    Webhook secrets and API keys are encrypted with envelope encryption, providing an additional layer of protection for these sensitive credentials. Secret rotation is supported with zero downtime.
+  </Tab>
+</Tabs>
+
+You can also implement field-level encryption for particularly sensitive data:
+
+```json
+{
+  "encryption": {
+    "fields": ["$.payment.card_number", "$.user.ssn"],
+    "keyId": "payment-processing-key"
+  }
+}
+```
+
+### Access Control
+
+HookFlo implements role-based access control (RBAC) for all resources:
+
+<Steps>
+  <Step title="Define Roles">
+    Create custom roles with specific permissions or use our predefined ones: Admin, Developer, and Viewer
+  </Step>
+  <Step title="Assign Resources">
+    Control access to specific webhooks, channels, or projects on a per-role basis
+  </Step>
+  <Step title="Configure Actions">
+    Set granular permissions for who can view, edit, or execute specific functions
+  </Step>
+  <Step title="Monitor Activity">
+    Review comprehensive audit logs that track all permission changes and access requests
+  </Step>
+</Steps>
+
+Teams can implement the principle of least privilege, ensuring users have only the permissions they need.
+
+## Algorithm-Agnostic Payload Processing
+
+HookFlo is designed to work with any webhook format or encoding scheme used by service providers.
+
+### Universal Decoding Support
+
+<Frame>
+  ![Payload Processing Flow](/images/payload-processing-flow.png)
+</Frame>
+
+Our platform automatically handles various encoding formats:
+
+| Encoding Type   | Description                                          | Use Case                                                  |
+| --------------- | ---------------------------------------------------- | --------------------------------------------------------- |
+| Base64          | Decodes Base64-encoded payloads (standard, URL-safe) | Services that encode binary data or compress payloads     |
+| URL Encoding    | Parses URL-encoded request bodies                    | Form submissions and legacy webhook systems               |
+| JWT Payload     | Extracts and validates claims from JWT tokens        | Modern API systems using token-based authentication       |
+| Gzip/Deflate    | Automatically decompresses compressed payloads       | High-volume webhook systems that optimize for size        |
+| Custom Encoding | Apply custom decoding functions                      | Proprietary encoding formats unique to specific providers |
+
+Multiple decoding steps can be chained to handle complex encoding schemes:
+
+```json
+{
+  "preProcessing": {
+    "decoding": [
+      {
+        "type": "base64",
+        "target": "body.data"
+      },
+      {
+        "type": "gzip",
+        "target": "decodedData"
+      }
+    ]
+  }
+}
+```
+
+### Comprehensive Algorithm Support
+
+HookFlo supports all commonly used signature verification algorithms:
+
+<CardGroup cols={3}>
+  <Card title="HMAC Algorithms" icon="lock-hashtag">
+    <ul>
+    <li>
+    HMAC-SHA256</li>
+
+    
+    <li>
+    HMAC-SHA1</li>
+
+    
+    <li>
+    HMAC-SHA384/512</li>
+
+    
+    <li>
+    HMAC-MD5 (legacy)</li>
+
+    </ul>
+  </Card>
+  <Card title="Asymmetric Algorithms" icon="key-skeleton">
+    <ul>
+    <li>
+    RSA-SHA256</li>
+
+    
+    <li>
+    ECDSA</li>
+
+    
+    <li>
+    EdDSA (Ed25519)</li>
+
+    </ul>
+  </Card>
+  <Card title="JWT Algorithms" icon="token">
+    <ul>
+    <li>
+    HS256, HS384, HS512</li>
+
+    
+    <li>
+    RS256, RS384, RS512</li>
+
+    
+    <li>
+    ES256, ES384, ES512</li>
+
+    
+    <li>
+    PS256, PS384, PS512</li>
+
+    </ul>
+  </Card>
+</CardGroup>
+
+New algorithms are continuously added to maintain compatibility with all webhook providers.
+
+### Verification Methods
+
+<Accordion title="Flexible Verification Strategies">
+  Different services implement webhook verification in various ways:
+
+  #### Header-Based Signatures
+
+  - Standard header placement
+  - Custom header names
+  - Multiple signature headers
+
+  #### Request Parameter Verification
+
+  - Query parameter signatures
+  - Form-encoded signatures
+  - Timestamp-based verification
+
+  #### Body Hash Verification
+
+  - Complete body hashing
+  - Canonicalized JSON
+  - Specific field selection
+
+  HookFlo's verification engine can be configured to match any provider's approach, ensuring you can securely process webhooks from any service.
+</Accordion>
+
+## Data Protection
+
+### Personal Data Protection
+
+<Info>
+  HookFlo includes features specifically designed to help with compliance requirements for personal data, including GDPR, CCPA, and other privacy regulations.
+</Info>
+
+<Steps>
+  <Step title="Data Redaction">
+    Automatically redact sensitive fields from logs and stored data
+
+    ```json
+    {
+      "redaction": {
+        "fields": [
+          "$.user.email",
+          "$.payment.card_number", 
+          "$.*.ssn",
+          "$..password"
+        ],
+        "replacement": "[REDACTED]"
+      }
+    }
+    ```
+  </Step>
+  <Step title="Data Minimization">
+    Configure which fields are stored and for how long to comply with data minimization principles
+  </Step>
+  <Step title="Right to Erasure">
+    Built-in tools to help with data removal requests and facilitate GDPR compliance
+  </Step>
+  <Step title="Data Classification">
+    Tag and track different types of sensitive data for comprehensive visibility
+  </Step>
+</Steps>
+
+### Configurable Retention Policies
+
+<Frame caption="Data Retention Control Panel">
+  ![Data Retention Settings](/images/data-retention-settings.png)
+</Frame>
+
+Set custom retention periods for webhook data:
+
+- **Time-Based Retention**: Automatically remove data after a specified period
+- **Volume-Based Limits**: Limit the number of webhook events stored
+- **Field-Level Retention**: Keep metadata longer than sensitive payload content
+- **Legal Hold**: Override retention for specific data when legally required
+
+```json
+{
+  "retention": {
+    "eventData": "30d",
+    "sensitiveFields": "7d",
+    "auditLogs": "1y"
+  }
+}
+```
+
+### Data Sovereignty
+
+For organizations with data residency requirements:
+
+<CardGroup cols={2}>
+  <Card title="Regional Processing" icon="globe">
+    Configure where webhook data is processed to meet local regulations
+  </Card>
+  <Card title="Storage Location" icon="database">
+    Control where data is stored at rest with region-specific storage
+  </Card>
+  <Card title="Transfer Prevention" icon="shield-slash">
+    Restrict data movement between regions with strict boundaries
+  </Card>
+  <Card title="Compliance Reporting" icon="file-certificate">
+    Built-in reports to demonstrate compliance with regional requirements
+  </Card>
+</CardGroup>
+
+HookFlo can be configured to maintain data within specific geographic boundaries to meet regulatory requirements.
+
+## Network Security
+
+### Source IP Restriction
+
+<Warning>
+  Always verify webhook source IPs against the provider's documented IP ranges to prevent spoofing attacks.
+</Warning>
+
+Restrict which IP addresses can send webhooks to your endpoints:
+
+```json
+{
+  "ipFiltering": {
+    "mode": "allowlist",
+    "addresses": [
+      "192.168.1.0/24",
+      "203.0.113.42",
+      "2001:db8::/32"
+    ]
+  }
+}
+```
+
+You can also implement:
+
+- **Dynamic Verification**: Verify source IPs against provider documentation
+- **Geo-Restriction**: Optional blocking based on geographic source
+- **Rate Limiting by IP**: Prevent abuse from specific sources
+
+### Attack Mitigation
+
+<Tabs>
+  <Tab title="Rate Limiting">
+    Configure limits on requests per endpoint to protect against flooding:
+
+    ```json
+    {
+      "rateLimiting": {
+        "maxRequests": 100,
+        "perTimeWindow": "1m",
+        "perSource": true
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Auto-Blocking">
+    Enable automatic temporary blocking of suspicious sources that show attack patterns:
+
+    ```json
+    {
+      "autoBlock": {
+        "thresholds": {
+          "failedVerifications": 5,
+          "timeWindow": "10m",
+          "blockDuration": "1h"
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab title="Traffic Analysis">
+    HookFlo monitors traffic patterns to detect anomalies and potential abuse attempts:
+
+    - Unusual volume spikes
+    - Pattern-based attack detection
+    - Correlation of failed verification attempts
+    - Geographic anomaly detection
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+### Security Checklist
+
+<Check>
+  - Enable signature verification for all webhook sources
+  - Implement IP allowlisting for known webhook providers
+  - Redact sensitive data fields using JSON path selectors
+  - Set appropriate retention periods for webhook data
+  - Configure webhook timeout settings to prevent hanging connections
+  - Regularly rotate webhook secrets and API keys
+  - Monitor the webhook security audit log for suspicious activity
+  - Use rate limiting to protect endpoints from abuse
+  - Implement strict CORS policies for web-based webhook endpoints
+</Check>
+
+### Security Recommendations
+
+<Accordion title="For Public-Facing Endpoints">
+  - Always enable signature verification
+  - Implement rate limiting and IP filtering
+  - Use HTTPS with modern TLS settings
+  - Consider adding CAPTCHA for user-initiated webhooks
+  - Monitor for unusual traffic patterns
+</Accordion>
+
+<Accordion title="For Internal Systems">
+  - Use mutual TLS (mTLS) for service-to-service communication
+  - Implement network-level isolation for webhook processing systems
+  - Consider using private endpoints within your network
+  - Implement strict egress filtering for webhook consumers
+</Accordion>
+
+## Security Resources
+
+<CardGroup cols={2}>
+  <Card title="Security Hardening Guide" icon="shield" href="/security/hardening">
+    Learn how to maximize the security of your HookFlo deployments
+  </Card>
+  <Card title="Compliance Documentation" icon="file-certificate" href="/security/compliance">
+    Access documentation to help with your compliance requirements
+  </Card>
+  <Card title="Security Changelog" icon="list-check" href="/security/changelog">
+    Track security updates and improvements to HookFlo
+  </Card>
+  <Card title="Vulnerability Disclosure" icon="bug" href="/security/vulnerability-disclosure">
+    Our process for responsible disclosure of security issues
+  </Card>
+</CardGroup>

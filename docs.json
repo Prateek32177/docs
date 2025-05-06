@@ -41,10 +41,6 @@
             ]
           },
           {
-            "group": "Dashboard",
-            "pages": ["dashboard/overview"]
-          },
-          {
             "group": "Security",
             "pages": ["security/best-practices"]
           }

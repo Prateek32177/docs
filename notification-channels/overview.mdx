@@ -1,6 +1,7 @@
 ---
 title: "Notification Channels Overview"
 description: "Learn about the different ways HookFlo can deliver alerts to your team"
+sidebarTitle: "Notification Channels"
 ---
 
 # Notification Channels Overview
@@ -10,18 +11,10 @@ Notification channels are the destinations where HookFlo sends alerts when webho
 ## Available Channels
 
 <CardGroup cols={2}>
-  <Card
-    title="Slack"
-    icon="slack"
-    href="/notification-channels/slack"
-  >
+  <Card title="Slack" icon="slack" href="/notification-channels/slack">
     Send rich, interactive alerts to Slack channels or direct messages
   </Card>
-  <Card
-    title="Email"
-    icon="envelope"
-    href="/notification-channels/email"
-  >
+  <Card title="Email" icon="envelope">
     Deliver detailed notifications to individual or group email addresses
   </Card>
 </CardGroup>
@@ -32,10 +25,7 @@ We're actively working on adding more notification channels:
 
 - Microsoft Teams
 - Discord
-- SMS via Twilio
-- Push notifications
 - Webhook forwarding
-- PagerDuty
 
 ## Channel Configuration
 
@@ -44,16 +34,17 @@ Each notification channel type requires specific configuration:
 <AccordionGroup>
   <Accordion title="Slack Configuration">
     Slack notifications require:
-    - OAuth integration with your Slack workspace
+
+    - Incoming Slack Channel Webhook URL
     - Channel selection for delivering messages
-    - Message formatting preferences
+    - Slack template
   </Accordion>
-  
   <Accordion title="Email Configuration">
     Email notifications require:
+
     - Recipient email addresses
     - Email subject template
-    - HTML and text content templates
+    - HTML and text content email templates
   </Accordion>
 </AccordionGroup>
 
@@ -68,7 +59,7 @@ All notification channels support customizable message templates:
 - **Markdown support**: Format your messages with rich text
 - **Preview capability**: Test your templates before saving
 
-### Filtering & Routing
+### Filtering & Routing  (Coming soon)
 
 Control exactly when and where notifications are sent:
 
@@ -77,7 +68,7 @@ Control exactly when and where notifications are sent:
 - **Channel routing**: Send different types of events to different channels
 - **Priority levels**: Set importance levels for different types of alerts
 
-### Scheduled Digests
+### Scheduled Digests (Coming Soon)
 
 Instead of receiving individual notifications, you can configure digest summaries:
 
@@ -91,15 +82,12 @@ Instead of receiving individual notifications, you can configure digest summarie
   <Step title="Start with Critical Alerts">
     Begin by setting up notifications for the most important events, then expand as needed.
   </Step>
-  
   <Step title="Use Clear Naming">
     Give your notification channels descriptive names that indicate their purpose.
   </Step>
-  
   <Step title="Test Your Templates">
     Always use the preview function to test how your messages will appear before activating them.
   </Step>
-  
   <Step title="Avoid Alert Fatigue">
     Be selective about which events trigger notifications to prevent overwhelming your team.
   </Step>

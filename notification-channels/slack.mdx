@@ -1,208 +1,270 @@
 ---
 title: "Slack Integration"
-description: "Set up Slack as a notification channel for your webhook alerts"
+description: "Set up Slack as a notification channel for your webhook alerts using Incoming Webhooks"
 ---
 
-# Slack Notifications
+# Slack Webhooks Integration
 
 This guide will help you set up Slack as a notification channel in HookFlo, allowing you to receive real-time alerts in your team's Slack workspace when webhook events are triggered.
 
 <Note>
-  HookFlo uses Slack's OAuth integration to securely connect with your workspace. This allows for rich, interactive messages with customizable formats.
+  HookFlo uses Slack's Incoming Webhooks to deliver notifications directly to your channels. This secure approach requires minimal permissions and provides customizable alert formats.
 </Note>
 
 ## Prerequisites
 
 - A HookFlo account with an active project
-- Admin access to a Slack workspace
+- Admin or appropriate permissions in a Slack workspace
 - At least one webhook platform already configured in HookFlo
 
 ## Integration Steps
 
 <Steps>
-  <Step title="Connect Your Slack Workspace">
-    <Accordion title="Authorizing HookFlo">
+  <Step title="Create a Slack App">
+    <Accordion title="Creating Your Slack App">
+      1. Visit the [Slack API website](https://api.slack.com/apps) and sign in with your Slack account
+      2. Click **Create New App**
+      3. Select **From scratch**
+      4. Enter a name for your app (e.g., "HookFlo Notifications")
+      5. Select the workspace where you want to receive notifications
+      6. Click **Create App**
+      
+      ![Create Slack App](/images/slack-create-app.png)
+    </Accordion>
+  </Step>
+
+  <Step title="Activate Incoming Webhooks">
+    <Accordion title="Enabling Webhooks">
+      1. In the left sidebar of your Slack app dashboard, click on **Incoming Webhooks**
+      2. Toggle the switch to **On** to activate Incoming Webhooks
+      3. Click **Add New Webhook to Workspace**
+      4. Select the Slack channel where you want to receive notifications
+      5. Click **Allow** to authorize the webhook
+      6. You'll be redirected back to the Incoming Webhooks page
+      7. Copy the generated **Webhook URL** (it will look like `https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX`)
+      
+      ![Activate Incoming Webhooks](/images/slack-incoming-webhooks.png)
+    </Accordion>
+  </Step>
+
+  <Step title="Configure HookFlo">
+    <Accordion title="Setting Up in HookFlo">
       1. Log in to your HookFlo dashboard
       2. Navigate to **Notification Channels** > **Add Channel**
       3. Select **Slack** from the available channels
-      4. Click **Connect to Slack**
-      5. You'll be redirected to Slack's authorization page
-      6. Select your workspace and authorize HookFlo with the requested permissions
-      7. After authorization, you'll be redirected back to HookFlo
+      4. Give your notification channel a descriptive name (e.g., "Product Team Alerts")
+      5. Paste the Slack Webhook URL you copied earlier
+      6. Configure notification preferences:
+         - **Default Username**: Set the display name for notifications (e.g., "HookFlo Alerts")
+         - **Default Icon**: Enter a URL for a custom icon or use emoji codes like `:bell:`
+         - **Message Format**: Choose between Simple, Detailed, or Custom formats
+      7. Click **Save Channel**
       
-      ![Slack Authorization](/images/slack-authorization.png)
-    </Accordion>
-  </Step>
-
-  <Step title="Configure Channel Settings">
-    <Accordion title="Basic Configuration">
-      1. After connecting your workspace, you'll need to configure the notification settings:
-      2. **Channel Name**: Give this notification channel a descriptive name (e.g., "Product Team Alerts")
-      3. **Default Slack Channel**: Select which Slack channel should receive notifications
-      4. **Message Format**: Choose between Simple, Detailed, or Custom formats
-      5. **Notification Icon**: Optionally customize the bot icon that appears with messages
-      6. **Default Username**: Set the display name for the notification bot
-      
-      ![Slack Configuration](/images/slack-config.png)
-    </Accordion>
-  </Step>
-
-  <Step title="Customize Message Templates">
-    <Accordion title="Message Formatting">
-      HookFlo offers three options for formatting Slack messages:
-      
-      1. **Simple**: Brief notification with essential information only
-      2. **Detailed**: Comprehensive message with expanded data fields
-      3. **Custom**: Create your own template using Slack's Block Kit format
-      
-      For custom templates, you can use our template editor with variables from your webhook payload:
-      
-      ```json
-      [
-        {
-          "type": "header",
-          "text": {
-            "type": "plain_text",
-            "text": "New {{event_type}} Event"
-          }
-        },
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": "*ID:* {{id}}\n*Time:* {{timestamp}}"
-          }
-        },
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": "{{message}}"
-          }
-        }
-      ]
-      ```
-      
-      Use the **Preview** button to see how your messages will appear before saving.
+      ![HookFlo Slack Configuration](/images/hookflo-slack-config.png)
     </Accordion>
   </Step>
 
   <Step title="Test Your Integration">
     <Accordion title="Verifying the Setup">
-      To test that your Slack notifications are working correctly:
+      To ensure your Slack notifications are working correctly:
 
       1. In the channel configuration page, click **Send Test Message**
       2. Select which webhook payload to use for the test (or use a sample)
       3. The test message will be sent to your configured Slack channel
       4. Verify that the message appears as expected
       
-      You can also trigger a real webhook event from one of your connected platforms and confirm that it appears in Slack.
+      If the test is successful, you're all set to receive webhook notifications in your Slack channel.
     </Accordion>
   </Step>
 </Steps>
 
-## Advanced Features
+## Message Customization
 
-### Channel Routing
+<Accordion title="Message Templates">
+  ### Custom Message Formatting
+  
+  HookFlo provides several options for formatting your Slack notifications:
 
-You can send different types of events to different Slack channels:
-
-<Accordion title="Channel Routing Configuration">
-  1. In your alert rule, override the default channel for specific events
-  2. Create multiple Slack notification channels with different default destinations
-  3. Use dynamic routing with template variables: `#{{team}}-alerts`
+  1. **Simple**: Brief notification with essential information only
+  2. **Detailed**: Comprehensive message with expanded data fields
+  3. **Custom**: Create your own template using Slack's Block Kit format
+  
+  For custom templates, use our template editor with variables from your webhook payload:
+  
+  ```json
+  [
+    {
+      "type": "header",
+      "text": {
+        "type": "plain_text",
+        "text": "New {{event_type}} Event"
+      }
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "*ID:* {{id}}\n*Time:* {{timestamp}}"
+      }
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "section",
+      "text": {
+        "type": "mrkdwn",
+        "text": "{{message}}"
+      }
+    }
+  ]
+  ```
 </Accordion>
 
-### Interactive Components
+<Accordion title="Dynamic Routing">
+  ### Channel Routing
+  
+  Send different types of events to different Slack channels:
 
-Make your Slack notifications actionable with interactive elements:
+  1. Create multiple Slack notification channels with different webhook URLs
+  2. In your alert rules, specify which channel to use based on event properties
+  3. Use template variables for dynamic routing: `#{{team}}-alerts`
+  
+  This allows you to direct high-priority alerts to urgent channels while sending routine updates elsewhere.
+</Accordion>
 
-<Accordion title="Adding Interactivity">
-  For custom templates, you can add interactive elements like buttons:
+## Best Practices
+
+<Accordion title="Notification Design">
+  ### Effective Alert Design
+
+  Follow these guidelines for creating effective Slack notifications:
+
+  1. **Be concise**: Include only essential information in the main message
+  2. **Use color coding**: Indicate severity with appropriate colors (green for success, yellow for warnings, red for critical)
+  3. **Provide context**: Include links to relevant systems or dashboards
+  4. **Group related notifications**: Use threading to keep channels organized
+  5. **Include actionable information**: Make it clear what action is needed, if any
+  
+  Example of a well-structured alert:
   
   ```json
   {
-    "type": "actions",
-    "elements": [
+    "attachments": [
       {
-        "type": "button",
-        "text": {
-          "type": "plain_text",
-          "text": "View Details"
-        },
-        "url": "{{details_url}}"
-      },
-      {
-        "type": "button",
-        "text": {
-          "type": "plain_text",
-          "text": "Acknowledge"
-        },
-        "value": "acknowledge",
-        "action_id": "acknowledge_alert"
+        "color": "#ff0000",
+        "pretext": "⚠️ *CRITICAL ALERT*",
+        "title": "Payment Gateway Error",
+        "title_link": "{{dashboard_url}}",
+        "text": "Transaction failed: {{error_message}}",
+        "fields": [
+          {
+            "title": "Customer",
+            "value": "{{customer_name}}",
+            "short": true
+          },
+          {
+            "title": "Amount",
+            "value": "{{currency}} {{amount}}",
+            "short": true
+          }
+        ],
+        "footer": "HookFlo Alert • {{formatted_time}}"
       }
     ]
   }
   ```
-
-  Note: Interactive components require additional setup in your Slack app configuration.
 </Accordion>
 
-### Conditional Notifications
+<Accordion title="Rate Limiting">
+  ### Avoiding Rate Limits
+  
+  Slack enforces rate limits on incoming webhooks:
 
-Send notifications only when certain conditions are met:
-
-<Accordion title="Condition-Based Alerts">
-  In your alert rules, you can add conditions like:
-
-  - Send to Slack only when `severity` is `high` or `critical`
-  - Route to different channels based on `event.category`
-  - Only send notifications during business hours
+  1. Configure alert batching for high-volume events
+  2. Implement cooldown periods for repetitive alerts
+  3. Use digest formats for summarizing multiple similar events
+  4. Set up circuit breakers to prevent flooding channels during outages
+  
+  HookFlo automatically handles retries with exponential backoff if rate limits are encountered.
 </Accordion>
 
-## Message Formatting Guide
+## Troubleshooting
 
-Slack messages in HookFlo support rich formatting using Slack's markdown-like syntax:
+<Accordion title="Common Issues">
+  ### Resolving Integration Problems
+  
+  If you encounter issues with your Slack notifications:
 
-<Accordion title="Text Formatting">
-```
-*bold*
-_italic_
-~strikethrough~
-`code`
-```code block```
-> blockquote
-• Bullet list
-1. Numbered list
-<https://example.com|Link with custom text>
-```
+  1. **Messages not appearing**: Verify the webhook URL is correct and hasn't been revoked
+  2. **Formatting errors**: Check your message template syntax in the HookFlo dashboard
+  3. **Rate limiting**: If sending high volumes, check Slack's rate limit documentation
+  4. **Missing data**: Ensure your payload contains the variables referenced in your templates
+  
+  You can view detailed delivery logs for each notification attempt in the HookFlo dashboard.
 </Accordion>
 
-<Accordion title="Mentions">
-You can mention users, channels, or everyone:
+<Accordion title="Testing Tools">
+  ### Debugging Tools
+  
+  HookFlo provides several tools to help debug your Slack integration:
 
-```
-@username
-#channel
-@here
-@channel
-@everyone
-```
-
-You can also use dynamic mentions with variables:
-
-```
-<@{{event.assigned_to}}>
-```
+  1. **Webhook Tester**: Send sample payloads to test your formatting
+  2. **Delivery Logs**: View detailed logs of notification attempts
+  3. **Request Inspector**: Examine the exact payload sent to Slack
+  4. **Template Validator**: Check your message template for syntax errors
+  
+  Use these tools to quickly identify and resolve any integration issues.
 </Accordion>
 
-<Accordion title="Emojis">
-Add emojis to make your notifications more expressive:
+## Advanced Configuration
 
-```
-:tada: New feature released!
-:warning: Alert triggered
-:red_circle: Critical error
-:large_green_circle: All systems operational
-```
+<Accordion title="Conditional Notifications">
+  ### Conditional Logic
+  
+  Send notifications only when certain conditions are met:
+
+  ```json
+  {
+    "conditions": [
+      {
+        "field": "$.severity",
+        "operator": "in",
+        "value": ["high", "critical"]
+      },
+      {
+        "field": "$.environment",
+        "operator": "eq",
+        "value": "production"
+      }
+    ],
+    "operator": "AND"
+  }
+  ```
+  
+  This allows you to filter notifications and reduce noise in your Slack channels.
+</Accordion>
+
+<Accordion title="Multiple Workspace Support">
+  ### Multi-Workspace Configuration
+  
+  If you need to send notifications to multiple Slack workspaces:
+
+  1. Create separate apps in each Slack workspace
+  2. Configure multiple Slack channels in HookFlo
+  3. Use routing rules to direct events to the appropriate workspace
+  
+  This is particularly useful for agencies or teams supporting multiple clients.
+</Accordion>
+
+<Accordion title="Notification Scheduling">
+  ### Time-Based Routing
+  
+  Configure when notifications are sent with time-based rules:
+
+  1. Set business hours for urgent notifications
+  2. Configure different channels for after-hours alerts
+  3. Schedule digest summaries for non-critical events
+  
+  This ensures that notifications reach the right people at the right time.
 </Accordion>
