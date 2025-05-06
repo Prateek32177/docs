@@ -8,7 +8,7 @@ description: "Connect HookFlo with Supabase to receive alerts for database and a
 This guide will help you set up a webhook integration between Supabase and HookFlo, allowing you to receive real-time alerts when database changes, authentication events, and other activities occur in your Supabase project.
 
 <Frame>
-  <img src="/logo/supabase-logo-wordmark--dark.png" style={{ borderRadius: '0.5rem' }} />
+  <img src="/supabase-logo-wordmark--dark.png" style={{ borderRadius: '0.5rem' }} />
 </Frame>
 
 <Note>
@@ -44,7 +44,7 @@ After logging into HookFlo, follow these steps to create and configure your Supa
       Once created, you'll see your webhook in manage webhooks table.
 
       <div className="w-full">
-      ![Create Webhook Screen](/images/supabase/create-webhook-hookflo.png)
+      ![Create Webhook Screen](/supabase/create-webhook-hookflo.png)
       </div>
 
     </Accordion>
@@ -61,7 +61,7 @@ After logging into HookFlo, follow these steps to create and configure your Supa
       Email notifications are perfect for critical alerts that require immediate attention and have lower usage limits, Use it for critical Alerts.
 
       <div className="w-full">
-      ![Email Configuration Dialog](/images/supabase/email-configuration.png)
+      ![Email Configuration Dialog](/supabase/email-configuration.png)
       </div>
     </Accordion>
     <Accordion title="Configure Slack Notifications">
@@ -76,7 +76,7 @@ After logging into HookFlo, follow these steps to create and configure your Supa
       Slack notifications are ideal for team collaboration and awareness, Highly recommended to use Slack and this has 3x Usage limits than email.
 
       <div className="w-full">
-      ![Slack Configuration Dialog](/images/supabase/slack-configuration.png)
+      ![Slack Configuration Dialog](/supabase/slack-configuration.png)
       </div>
     </Accordion>
   </Step>
@@ -93,7 +93,7 @@ After logging into HookFlo, follow these steps to create and configure your Supa
       You can also configure notification channels from this panel if you haven't done so already.
 
       <div className="w-full">
-      ![Connection Configuration Panel](/images/supabase/configure-application.png)
+      ![Connection Configuration Panel](/supabase/configure-application.png)
       </div>
 
     </Accordion>
@@ -116,7 +116,7 @@ Now that your HookFlo webhook is set up, you need to configure Supabase to send 
       This is where you'll create database webhooks that trigger on table events.
       
       <div className="w-full">
-      ![Supabase Dashboard Navigation](/images/supabase/choose-database-webhooks.png)
+      ![Supabase Dashboard Navigation](/supabase/choose-database-webhooks.png)
       </div>
 
     </Accordion>
@@ -138,11 +138,11 @@ Now that your HookFlo webhook is set up, you need to configure Supabase to send 
       8. Click **Save** to create the webhook
 
       <div className="w-full">
-      ![Create Database Webhook Form](/images/supabase/create-webhook.png)
+      ![Create Database Webhook Form](/supabase/create-webhook.png)
       </div>
 
       <div className="w-full">
-      ![Create Database Webhook Form](/images/supabase/configure-secret-url-values.png)
+      ![Create Database Webhook Form](/supabase/configure-secret-url-values.png)
       </div>
 
     </Accordion>
@@ -189,8 +189,6 @@ To ensure your integration is working properly:
 <Steps>
   <Step title="Generate Test Events">
     <Accordion title="Run Test Events">
-      <div className="flex gap-8">
-      <div className="flex-1">
       1. In your Supabase project, make a change to the monitored table:
          - Insert a new record
          - Update an existing record
@@ -198,14 +196,6 @@ To ensure your integration is working properly:
 
       For authentication events, perform the corresponding action (e.g., create a new user).
 
-      </div>
-
-      <div className="w-2/5">
-      ![Making a Test Change](/images/test-change.png)
-
-      </div>
-
-      </div>
     </Accordion>
   </Step>
   <Step title="Verify in HookFlo">
@@ -222,7 +212,7 @@ To ensure your integration is working properly:
       </div>
 
       <div className="w-2/5">
-      ![Event Logs in HookFlo](/images/event-logs.png)
+      ![Event Logs in HookFlo](/event-logs.png)
 
       </div>
 
@@ -353,42 +343,21 @@ Here's an example of what the webhook payload looks like for different events:
   <Accordion title="Webhook Not Firing">
     If your webhook isn't sending events to HookFlo:
 
-    <div className="flex gap-8">
-    <div className="flex-1">
     1. Check that the `http` extension is enabled in your Supabase project
     2. Verify that your trigger is correctly set up on the table
     3. Check the Supabase logs for any errors related to the webhook function
     4. Ensure the webhook URL and headers are correctly configured
     5. Verify that your HookFlo webhook is in the active state
 
-    </div>
-
-    <div className="w-2/5">
-    ![Supabase Logs](/images/supabase-logs.png)
-
-    </div>
-
-    </div>
   </Accordion>
   <Accordion title="Events Received but No Notifications">
     If HookFlo is receiving events but you're not getting notifications:
 
-    <div className="flex gap-8">
-    <div className="flex-1">
     1. Check your notification channel configurations in HookFlo
     2. Verify that your email/Slack webhooks are correctly set up
     3. Check if you have any conditional rules that might be filtering out your events
     4. Look for any errors in the HookFlo event logs
     5. Try a test notification from the HookFlo dashboard
-
-    </div>
-
-    <div className="w-2/5">
-    ![Notification Settings](/images/notification-settings.png)
-
-    </div>
-
-    </div>
   </Accordion>
   <Accordion title="Performance Considerations">
     For tables with high-frequency changes:
