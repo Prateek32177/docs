@@ -55,8 +55,6 @@ After logging into HookFlo, follow these steps to create and configure your Supa
   </Step>
   <Step title="Setup Notification Channel">
     <Accordion title="Configure Email Notifications">
-      <div className="flex gap-4">
-      <div className="flex-1">
       1. Toggle the **Email Notifications** switch to enable email alerts
       2. In the dialog box that appears, enter the email address where you want to receive notifications
       3. Select an email template from the dropdown menu
@@ -66,18 +64,12 @@ After logging into HookFlo, follow these steps to create and configure your Supa
 
       Email notifications are perfect for critical alerts that require immediate attention and have lower usage limits, Use it for critical Alerts.
 
-      </div>
-
       <div className="w-full">
       ![Email Configuration Dialog](/email-configuration.png)
-
-      </div>
-
       </div>
     </Accordion>
     <Accordion title="Configure Slack Notifications">
-      <div className="flex gap-4">
-      <div className="flex-1">
+    
       1. Toggle the **Slack Notifications** switch to enable Slack alerts
       2. In the dialog box, paste your Slack webhook URL (see [How to Get a Slack Webhook URL](/guides/slack-webhook))
       3. Keep the random generated name or enter a custom one (optional)
@@ -87,20 +79,13 @@ After logging into HookFlo, follow these steps to create and configure your Supa
 
       Slack notifications are ideal for team collaboration and awareness, Highly recommended to use Slack and this has 3x Usage limits than email.
 
-      </div>
-
       <div className="w-full">
       ![Slack Configuration Dialog](/slack-configuration.png)
-
-      </div>
-
       </div>
     </Accordion>
   </Step>
   <Step title="Connect your Webhook with application">
     <Accordion title="Configure Application">
-      <div className="flex gap-4">
-      <div className="flex-1">
       1. Click the **Connect** button to activate your webhook
       2. Select **Supabase** as application to integrate
       3. A configuration panel will appear with your webhook credentials:
@@ -111,14 +96,10 @@ After logging into HookFlo, follow these steps to create and configure your Supa
 
       You can also configure notification channels from this panel if you haven't done so already.
 
-      </div>
-
       <div className="w-full">
       ![Connection Configuration Panel](/configure-application.png)
-
       </div>
 
-      </div>
     </Accordion>
   </Step>
 </Steps>
@@ -130,8 +111,6 @@ Now that your HookFlo webhook is set up, you need to configure Supabase to send 
 <Steps>
   <Step title="Setup Supabase Webhook">
     <Accordion title="Access Supabase Webhooks">
-      <div className="flex gap-4">
-      <div className="flex-1">
       1. Log in to your [Supabase Dashboard](https://supabase.com/dashboard)
       2. Select your [Project](https://supabase.com/dashboard/projects)
       3. Select **Integrations** option in the left sidebar
@@ -139,21 +118,15 @@ Now that your HookFlo webhook is set up, you need to configure Supabase to send 
       5. After Clicking Database Webhooks app you will see 2 tabs Overview and Webhooks choose Webhooks and proceed with next step.
 
       This is where you'll create database webhooks that trigger on table events.
-
-      </div>
-
+      
       <div className="w-full">
       ![Supabase Dashboard Navigation](/choose-database-webhooks.png)
-
       </div>
 
-      </div>
     </Accordion>
   </Step>
   <Step title="Create a Database Webhook">
     <Accordion title="Configure Webhook Details">
-      <div className="flex gap-4">
-      <div className="flex-1">
       1. Click **Create a new webhook**
       2. Provide a descriptive name for your webhook (e.g., `hookflo-users-events`)
       3. Select the table you want to monitor from the dropdown
@@ -168,20 +141,14 @@ Now that your HookFlo webhook is set up, you need to configure Supabase to send 
          - `x-webhook-token`: [Your webhook token from HookFlo]
       8. Click **Save** to create the webhook
 
-      </div>
-
       <div className="w-full">
-
       ![Create Database Webhook Form](/create-webhook.png)
-
       </div>
 
       <div className="w-full">
       ![Create Database Webhook Form](/configure-secret-url-values.png)
-
       </div>
 
-      </div>
     </Accordion>
   </Step>
   <Step title="Enable HTTP Extension (If Needed)">
