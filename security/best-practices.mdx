@@ -44,7 +44,6 @@ HookFlo supports multiple methods for authenticating and verifying webhook sourc
 }
 ```
 
-
 ```json JWT Configuration
 {
   "verification": {
@@ -67,7 +66,7 @@ HookFlo verifies signatures using the exact algorithm specified by the webhook p
 
 <Tabs>
   <Tab title="Transport Encryption">
-    All API requests use TLS 1.2\+ to encrypt data in transit between systems. HookFlo regularly updates its TLS configuration to follow security best practices and disable deprecated protocols or cipher suites.
+    All API requests use TLS 1.2+ to encrypt data in transit between systems. HookFlo regularly updates its TLS configuration to follow security best practices and disable deprecated protocols or cipher suites.
   </Tab>
   <Tab title="Storage Encryption">
     All stored webhook data is encrypted using AES-256. Our database encryption ensures that your webhook payloads, configurations, and secrets remain protected even in the unlikely event of unauthorized access to the underlying storage.
@@ -155,55 +154,25 @@ HookFlo supports all commonly used signature verification algorithms:
 <CardGroup cols={3}>
   <Card title="HMAC Algorithms" icon="lock-hashtag">
     <ul>
-    <li>
-    HMAC-SHA256</li>
-
-    
-    <li>
-    HMAC-SHA1</li>
-
-    
-    <li>
-    HMAC-SHA384/512</li>
-
-    
-    <li>
-    HMAC-MD5 (legacy)</li>
-
+      <li>HMAC-SHA256</li>
+      <li>HMAC-SHA1</li>
+      <li>HMAC-SHA384/512</li>
+      <li>HMAC-MD5 (legacy)</li>
     </ul>
   </Card>
   <Card title="Asymmetric Algorithms" icon="key-skeleton">
     <ul>
-    <li>
-    RSA-SHA256</li>
-
-    
-    <li>
-    ECDSA</li>
-
-    
-    <li>
-    EdDSA (Ed25519)</li>
-
+      <li>RSA-SHA256</li>
+      <li>ECDSA</li>
+      <li>EdDSA (Ed25519)</li>
     </ul>
   </Card>
   <Card title="JWT Algorithms" icon="token">
     <ul>
-    <li>
-    HS256, HS384, HS512</li>
-
-    
-    <li>
-    RS256, RS384, RS512</li>
-
-    
-    <li>
-    ES256, ES384, ES512</li>
-
-    
-    <li>
-    PS256, PS384, PS512</li>
-
+      <li>HS256, HS384, HS512</li>
+      <li>RS256, RS384, RS512</li>
+      <li>ES256, ES384, ES512</li>
+      <li>PS256, PS384, PS512</li>
     </ul>
   </Card>
 </CardGroup>
