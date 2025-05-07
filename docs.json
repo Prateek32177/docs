@@ -17,9 +17,7 @@
             "group": "Get Started",
             "pages": [
               "introduction",
-              "getting-started/quickstart",
-              "getting-started/authentication",
-              "getting-started/security"
+              "getting-started/quickstart"
             ]
           },
           {
@@ -36,8 +34,7 @@
             "group": "Notification Channels",
             "pages": [
               "notification-channels/overview",
-              "notification-channels/slack",
-              "notification-channels/email"
+              "notification-channels/slack"
             ]
           },
           {
