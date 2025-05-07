@@ -7,9 +7,7 @@ description: "Connect HookFlo with Supabase to receive alerts for database and a
 
 This guide will help you set up a webhook integration between Supabase and HookFlo, allowing you to receive real-time alerts when database changes, authentication events, and other activities occur in your Supabase project.
 
-<Frame>
-  <img src="/supabase-logo-wordmark--dark.png" style={{ borderRadius: '0.5rem' }} />
-</Frame>
+<img src="/supabase-logo-wordmark--dark.png" width="500px" height="400px" />
 
 <Note>
   Supabase uses a combination of database triggers and Postgres functions to deliver webhook events. HookFlo seamlessly integrates with both Supabase's built-in webhooks and custom webhook implementations.
@@ -44,9 +42,10 @@ After logging into HookFlo, follow these steps to create and configure your Supa
       Once created, you'll see your webhook in manage webhooks table.
 
       <div className="w-full">
-      ![Create Webhook Screen](/supabase/create-webhook-hookflo.png)
-      </div>
 
+      ![Create Webhook Screen](/supabase/create-webhook-hookflo.png)
+
+      </div>
     </Accordion>
   </Step>
   <Step title="Setup Notification Channel">
@@ -62,10 +61,10 @@ After logging into HookFlo, follow these steps to create and configure your Supa
 
       <div className="w-full">
       ![Email Configuration Dialog](/supabase/email-configuration.png)
+
       </div>
     </Accordion>
     <Accordion title="Configure Slack Notifications">
-    
       1. Toggle the **Slack Notifications** switch to enable Slack alerts
       2. In the dialog box, paste your Slack webhook URL (see [How to Get a Slack Webhook URL](/guides/slack-webhook))
       3. Keep the random generated name or enter a custom one (optional)
@@ -77,6 +76,7 @@ After logging into HookFlo, follow these steps to create and configure your Supa
 
       <div className="w-full">
       ![Slack Configuration Dialog](/supabase/slack-configuration.png)
+
       </div>
     </Accordion>
   </Step>
@@ -94,8 +94,8 @@ After logging into HookFlo, follow these steps to create and configure your Supa
 
       <div className="w-full">
       ![Connection Configuration Panel](/supabase/configure-application.png)
-      </div>
 
+      </div>
     </Accordion>
   </Step>
 </Steps>
@@ -114,11 +114,11 @@ Now that your HookFlo webhook is set up, you need to configure Supabase to send 
       5. After Clicking Database Webhooks app you will see 2 tabs Overview and Webhooks choose Webhooks and proceed with next step.
 
       This is where you'll create database webhooks that trigger on table events.
-      
+
       <div className="w-full">
       ![Supabase Dashboard Navigation](/supabase/choose-database-webhooks.png)
-      </div>
 
+      </div>
     </Accordion>
   </Step>
   <Step title="Create a Database Webhook">
@@ -139,12 +139,13 @@ Now that your HookFlo webhook is set up, you need to configure Supabase to send 
 
       <div className="w-full">
       ![Create Database Webhook Form](/supabase/create-webhook.png)
+
       </div>
 
       <div className="w-full">
       ![Create Database Webhook Form](/supabase/configure-secret-url-values.png)
-      </div>
 
+      </div>
     </Accordion>
   </Step>
   <Step title="Enable HTTP Extension (If Needed)">
@@ -195,7 +196,6 @@ To ensure your integration is working properly:
          - Delete a record
 
       For authentication events, perform the corresponding action (e.g., create a new user).
-
     </Accordion>
   </Step>
   <Step title="Verify in HookFlo">
@@ -203,7 +203,7 @@ To ensure your integration is working properly:
       <div className="flex gap-8">
       <div className="flex-1">
       1. Return to your HookFlo dashboard
-      2. Navigate to **Notification Logs**
+      2. Navigate to [Notification Logs](https://www.hookflo.com/dashboard/logs)
       3. You should see the test events appear with details about the changes
       4. If you've configured notification channels, check your email or Slack for alerts
 
@@ -348,7 +348,6 @@ Here's an example of what the webhook payload looks like for different events:
     3. Check the Supabase logs for any errors related to the webhook function
     4. Ensure the webhook URL and headers are correctly configured
     5. Verify that your HookFlo webhook is in the active state
-
   </Accordion>
   <Accordion title="Events Received but No Notifications">
     If HookFlo is receiving events but you're not getting notifications:
