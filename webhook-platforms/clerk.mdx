@@ -70,7 +70,7 @@ After logging into HookFlo, follow these steps to create and configure your Cler
     </Accordion>
     <Accordion title="Configure Slack Notifications">
       1. Toggle the **Slack Notifications** switch to enable Slack alerts
-      2. In the dialog box, paste your Slack webhook URL (see [How to Get a Slack Webhook URL](/guides/slack-webhook))
+      2. In the dialog box, paste your Slack webhook URL (see [How to Get a Slack Webhook URL](/notification-channels/slack))
       3. Keep the random generated name or enter a custom one (optional)
       4. Select a notification template from the available options
       5. Preview and edit the template as needed
@@ -113,7 +113,7 @@ Now that your HookFlo webhook is set up, you need to configure Clerk to send eve
     <Accordion title="Configuring Clerk to Send Webhooks">
       1. Log in to your [Clerk Dashboard](https://dashboard.clerk.dev/)
       2. Select your application
-      3. Navigate to **Webhooks** in the left sidebar
+      3. Navigate to  **Configure Tab** \> **Select** **Webhooks** in the left sidebar
       4. Click **Add Endpoint**
       5. Enter your HookFlo webhook URL that you copied from the previous step
       6. Under **Message filtering**, select the events you want to monitor:
@@ -122,9 +122,10 @@ Now that your HookFlo webhook is set up, you need to configure Clerk to send eve
          - For authentication events: `emailAddress.verified`, `password.reset`, etc.
       7. Click **Create**
 
-      <div className="w-full">
-      ![Clerk Webhook Configuration](/clerk/clerk-webhook-setup.png)
 
+      <div className="w-full">
+      ![Clerk Webhook Configuration](/choose-webhooks-nav.png)
+      ![Select Even And Create Pn](/images/select-even-and-create.png)
       </div>
     </Accordion>
   </Step>
@@ -140,7 +141,7 @@ Now that your HookFlo webhook is set up, you need to configure Clerk to send eve
       This secret is crucial for verifying that webhook events are genuinely from Clerk.
 
       <div className="w-full">
-      ![Clerk Signing Secret](/clerk/clerk-signing-secret.png)
+      ![Clerk Signing Secret](/get-clerk-secret.png)
 
       </div>
     </Accordion>
@@ -156,7 +157,6 @@ Now that your HookFlo webhook is set up, you need to configure Clerk to send eve
       This step completes the secure connection between Clerk and HookFlo.
 
       <div className="w-full">
-
       ![HookFlo Signing Secret Configuration](/clerk-secret-config.png)
 
       </div>
@@ -387,4 +387,5 @@ When setting up webhook integrations between Clerk and HookFlo, keep these secur
 
 You've successfully set up real-time authentication event tracking and alerting between Clerk and HookFlo in just a few minutes. Your team can now receive immediate notifications about important user events, helping you respond quickly to critical situations.
 
-Need more help? [Contact our support team](mailto:team.hookflo@gmail.com) or join our [Discord forum](https://discord.gg/SNmCjU97nr).
+Need more help? [Contact our support team](mailto:team.hookflo@gmail.com) or join our [Discord forum](https://discord.gg/SNmCjU97nr)
+or [DM me directly on X](https://x.com/Prateek53788134).

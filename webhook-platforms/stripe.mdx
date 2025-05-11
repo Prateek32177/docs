@@ -3,7 +3,11 @@ title: "Stripe"
 description: "Set up webhooks to receive notifications for payment and subscription events from Stripe"
 ---
 
-<img src="/images/Stripewordmark-blurple(small).png" width='300px' height='150px' />
+<img
+  src="/images/Stripewordmark-blurple(small).png"
+  width="300px"
+  height="150px"
+/>
 
 ## Integration Guide
 
@@ -66,11 +70,12 @@ After logging into HookFlo, follow these steps to create and configure your Stri
     </Accordion>
     <Accordion title="Configure Slack Notifications">
       1. Toggle the **Slack Notifications** switch to enable Slack alerts
-      2. In the dialog box, paste your Slack webhook URL (see [How to Get a Slack Webhook URL](/guides/slack-webhook))
-      3. Keep the random generated name or enter a custom one (optional)
-      4. Select a notification template from the available options
-      5. Preview and edit the template as needed
-      6. Click **Save Configuration** to confirm your settings
+      2. In the dialog box, paste your Slack webhook URL (see 
+      3. )
+      4. Keep the random generated name or enter a custom one (optional)
+      5. Select a notification template from the available options
+      6. Preview and edit the template as needed
+      7. Click **Save Configuration** to confirm your settings
 
       Slack notifications are ideal for team collaboration and awareness. Highly recommended to use Slack as it has 3x usage limits compared to email.
 
@@ -109,7 +114,7 @@ Now that your HookFlo webhook is set up, you need to configure Stripe to send ev
     <Accordion title="Configuring Stripe to Send Webhooks">
       1. Log in to your [Stripe Dashboard](https://dashboard.stripe.com/)
       2. Navigate to **Developers** \> **Webhooks**
-      3. Click **Add endpoint**
+      3. Click **Add Destination**
       4. Enter your HookFlo webhook URL that you copied from the previous step
       5. Under **Events to send**, select the events you want to monitor
          - For payment events: `payment_intent.succeeded`, `payment_intent.payment_failed`, etc.
@@ -117,8 +122,16 @@ Now that your HookFlo webhook is set up, you need to configure Stripe to send ev
          - For customer events: `customer.created`, `customer.updated`, etc.
       6. Click **Add endpoint**
 
+         _Below screenshots are from Stripe Test Dashboard might differ in Live environment, But flow of integration with Hookflo will remains same._
+
       <div className="w-full">
-      ![Stripe Webhook Configuration](/stripe/stripe-webhook-setup.png)
+      ![Stripe Webhook Configuration](/stripe-select-webhooks.png)
+
+      ![Stripe Webhook Configuration](/stripe-add-destination.png)
+
+      ![Stripe Webhook Configuration](/stripe-select-event.png)
+
+      ![Stripe Webhook Configuration](/stripe-add-hookflo-url.png)
 
       </div>
     </Accordion>
@@ -133,10 +146,11 @@ Now that your HookFlo webhook is set up, you need to configure Stripe to send ev
 
       This secret is crucial for verifying that webhook events are genuinely from Stripe.
 
-      <div className="w-full">
-      ![Stripe Signing Secret](/stripe/stripe-signing-secret.png)
+      \*Below screenshots are from Stripe Test Dashboard might differ in Live environment, But flow of integration with Hookflo will remains same.
 
-      </div>
+      ![Stripe Get Secret Pn](/images/stripe-get-secret.png)
+
+      <div className="w-full" />
     </Accordion>
   </Step>
   <Step title="Configure Webhook Verification in HookFlo">
@@ -370,4 +384,5 @@ When setting up webhook integrations between Stripe and HookFlo, keep these secu
 
 You've successfully set up real-time payment event tracking and alerting between Stripe and HookFlo in just a few minutes. Your team can now receive immediate notifications about important payment events, helping you respond quickly to critical situations.
 
-Need more help? [Contact our support team](mailto:team.hookflo@gmail.com) or join our [Discord forum](https://discord.gg/SNmCjU97nr).
+Need more help? [Contact our support team](mailto:team.hookflo@gmail.com) or join our [Discord forum](https://discord.gg/SNmCjU97nr)
+or [DM me directly on X](https://x.com/Prateek53788134).
