@@ -1,5 +1,5 @@
 ---
-title: "Security Overview"
+title: "Overview"
 description: "Learn about HookFlo's comprehensive security features and algorithm-agnostic payload processing"
 ---
 
@@ -31,6 +31,7 @@ HookFlo supports multiple methods for authenticating and verifying webhook sourc
 </CardGroup>
 
 <CodeGroup>
+
 ```json HMAC Configuration
 {
   "verification": {
@@ -42,6 +43,7 @@ HookFlo supports multiple methods for authenticating and verifying webhook sourc
   }
 }
 ```
+
 
 ```json JWT Configuration
 {
@@ -56,6 +58,7 @@ HookFlo supports multiple methods for authenticating and verifying webhook sourc
   }
 }
 ```
+
 </CodeGroup>
 
 HookFlo verifies signatures using the exact algorithm specified by the webhook provider, ensuring compatibility with any service.
@@ -100,25 +103,55 @@ HookFlo supports all commonly used signature verification algorithms:
 <CardGroup cols={3}>
   <Card title="HMAC Algorithms" icon="lock-hashtag">
     <ul>
-      <li>HMAC-SHA256</li>
-      <li>HMAC-SHA1</li>
-      <li>HMAC-SHA384/512</li>
-      <li>HMAC-MD5 (legacy)</li>
+    <li>
+    HMAC-SHA256</li>
+
+    
+    <li>
+    HMAC-SHA1</li>
+
+    
+    <li>
+    HMAC-SHA384/512</li>
+
+    
+    <li>
+    HMAC-MD5 (legacy)</li>
+
     </ul>
   </Card>
   <Card title="Asymmetric Algorithms" icon="key-skeleton">
     <ul>
-      <li>RSA-SHA256</li>
-      <li>ECDSA</li>
-      <li>EdDSA (Ed25519)</li>
+    <li>
+    RSA-SHA256</li>
+
+    
+    <li>
+    ECDSA</li>
+
+    
+    <li>
+    EdDSA (Ed25519)</li>
+
     </ul>
   </Card>
   <Card title="JWT Algorithms" icon="token">
     <ul>
-      <li>HS256, HS384, HS512</li>
-      <li>RS256, RS384, RS512</li>
-      <li>ES256, ES384, ES512</li>
-      <li>PS256, PS384, PS512</li>
+    <li>
+    HS256, HS384, HS512</li>
+
+    
+    <li>
+    RS256, RS384, RS512</li>
+
+    
+    <li>
+    ES256, ES384, ES512</li>
+
+    
+    <li>
+    PS256, PS384, PS512</li>
+
     </ul>
   </Card>
 </CardGroup>
@@ -184,5 +217,5 @@ New algorithms are continuously added to maintain compatibility with all webhook
   - Implement strict egress filtering for webhook consumers
 </Accordion>
 
-Need Support? [Let us know](mailto:support@hookflo.dev)  
+Need Support? [Let us know](mailto:support@hookflo.dev)\
 or [DM me directly on X](https://x.com/Prateek53788134).
