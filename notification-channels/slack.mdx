@@ -1,23 +1,104 @@
 ---
 title: "Slack"
-description: "Set up Slack as a notification channel for your webhook alerts using Incoming Webhooks"
+description: "Set up Slack as a notification channel for your webhook alerts using the new simplified integration"
 ---
 
-## Slack Webhook Generation Guide
+## Slack Integration Guide
 
 This guide will help you set up Slack as a notification channel in HookFlo, allowing you to receive real-time alerts in your team's Slack workspace when webhook events are triggered.
 
 <Note>
-  HookFlo uses Slack's Incoming Webhooks to deliver notifications directly to your channels. This secure approach requires minimal permissions and provides customizable alert formats.
+  HookFlo now provides a simplified one-click Slack integration that automatically handles permissions and setup. Connect once and use across all your webhooks.
 </Note>
 
-## Prerequisites
+## 
 
-- A HookFlo account with an active project
-- Admin or appropriate permissions in a Slack workspace
-- At least one webhook platform already configured in HookFlo
+## Quick Integration (Recommended)
 
-## Integration Steps
+<Steps>
+  <Step title="Connect Your Slack Workspace">
+    <Accordion title="One-Click Connection">
+      You can connect your Slack workspace from two places:
+
+      **Option 1: From Profile Settings**
+
+      1. Navigate to your Profile → Settings → Integrations
+      2. Find the Slack integration section
+      3. Click the **"Add to Slack"** button
+      4. Authorize HookFlo in your Slack workspace
+      5. Once connected, this workspace will be available for all your webhooks
+
+      **Option 2: From Webhook Configuration**
+
+      1. Go to your webhook's notification settings
+      2. Look for the Slack notification option
+      3. Click **"Add to Slack"** if not already connected
+      4. Complete the authorization process
+
+      Both methods work identically - connect once and use everywhere.
+    </Accordion>
+  </Step>
+  <Step title="Configure Channel Notifications">
+    <Accordion title="Select Channels Per Webhook">
+      1. In your webhook's notification settings, toggle **Slack notifications ON**
+      2. Select which channel should receive alerts from the dropdown
+      3. If your desired channel doesn't appear:
+         - Go to that Slack channel
+         - Type `/invite @Hookflo` to invite the bot
+         - The channel will then appear in the dropdown
+      4. Save your settings
+
+      **Key Points:**
+
+      - Each webhook can send alerts to different channels
+      - Private channels need the HookFlo bot invited to be selectable
+      - One workspace connection works for all webhooks
+    </Accordion>
+  </Step>
+  <Step title="Test Your Setup">
+    <Accordion title="Verify Notifications">
+      1. Use the test feature in your webhook configuration
+      2. Send a test alert to verify it appears in your selected Slack channel
+      3. Customize message templates using the Slack template builder if needed
+
+      Your Slack integration is now ready to receive real-time webhook alerts\!
+    </Accordion>
+  </Step>
+</Steps>
+
+## Managing Your Connection
+
+### Workspace Management
+
+- Only one Slack workspace can be connected at a time
+- Change workspaces anytime from Profile Settings → Integrations
+- Switching workspaces applies to all webhooks but requires reconfiguring channel selections
+
+### Permissions
+
+HookFlo requests minimal permissions:
+
+- `chat:write` - Send alerts to channels
+- `channels:read` - List available channels
+- `groups:read` - Access private channels when invited
+
+### Channel Access
+
+If a channel is disabled or missing from the dropdown:
+
+1. Go to the Slack channel
+2. Type `/invite @Hookflo`
+3. The channel will become available for selection
+
+---
+
+## Legacy Integration Method
+
+<Note>
+  The following method is not supported now. Use the simplified method above instead.
+</Note>
+
+### Manual Webhook Setup (Legacy)
 
 <Steps>
   <Step title="Create a Slack App">
@@ -95,6 +176,7 @@ This guide will help you set up Slack as a notification channel in HookFlo, allo
   6. your have full control over how slack message should looks and can be previewed        with real time editor
 </Accordion>
 
+---
 
 Need more help? [Contact our support team](mailto:team.hookflo@gmail.com) or join our [Discord forum](https://discord.gg/SNmCjU97nr).
 or [DM me directly on X](https://x.com/Prateek53788134)
