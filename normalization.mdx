@@ -1,0 +1,433 @@
+---
+title: "Webhook Payload Normalization"
+description: "Stop writing webhook handlers for every platform. Normalize once, integrate everywhere."
+icon: "webhook"
+---
+
+<Note>
+  **Early Access:** Webhook payload normalization is currently in active development. Payment normalization is available now via `@hookflo/tern`. Additional categories (Auth, Database, Infrastructure) are coming soon.
+</Note>
+
+## The Problem
+
+Your app integrates with Stripe for payments. Then a customer wants Razorpay. Another wants PayPal. Each platform sends webhooks in completely different formats:
+
+<CodeGroup>
+
+```json Stripe
+{
+  "id": "ch_3NqBXY2eZvKYlo2C0wB6xJZv",
+  "object": "charge",
+  "amount": 5000,
+  "amount_captured": 5000,
+  "currency": "usd",
+  "status": "succeeded",
+  "payment_method_details": {
+    "card": {
+      "brand": "visa",
+      "last4": "4242"
+    }
+  },
+  "metadata": {...},
+  "billing_details": {...}
+  // ... 50+ more fields
+}
+```
+
+
+```json Razorpay
+{
+  "entity": "payment",
+  "amount": 500000,
+  "currency": "INR",
+  "status": "captured",
+  "order_id": "order_JZ8kPWNJuGd8q4",
+  "method": "card",
+  "card": {
+    "network": "Visa",
+    "last4": "4242"
+  },
+  "captured": true
+  // ... different structure entirely
+}
+```
+
+</CodeGroup>
+
+Now you're maintaining separate handlers for each platform. Migration? Rewrite everything.
+
+## The Solution
+
+Hookflo's `@hookflo/tern` normalizes all webhook payloads into consistent schemas:
+
+```javascript
+import { normalize } from '@hookflo/tern';
+
+app.post('/webhooks/:platform', async (req, res) => {
+  // Works with Stripe, Razorpay, PayPal, Square...
+  const payment = normalize(req.body, {
+    platform: req.params.platform,
+    category: 'payments' // ✅ Available now
+  });
+  
+  // Always get the same structure
+  await processPayment({
+    id: payment.transaction_id,
+    amount: payment.amount,
+    currency: payment.currency,
+    status: payment.status,
+    method: payment.payment_method
+  });
+});
+```
+
+---
+
+## Benefits
+
+### 1. Switch Platforms Without Code Changes
+
+**The Impact:** Migrate from one provider to another in minutes, not months.
+
+Testing a new payment processor? Want to switch auth providers? With normalized payloads, your webhook handlers work with any platform immediately.
+
+**Before Hookflo:**
+
+- 2-3 weeks of development per migration
+- High risk of bugs in rewritten handlers
+- Business disruption during transition
+- Vendor lock-in due to switching costs
+
+**With Hookflo:**
+
+- Change a config value
+- Zero code modifications
+- Test in staging instantly
+- True multi-vendor freedom
+
+---
+
+### 2. Reduce Bandwidth by 40-70%
+
+**The Impact:** Significant cost savings at scale, faster processing, better performance.
+
+Raw webhooks include dozens of unnecessary fields. Stripe sends 50+ fields per payment webhook — you need maybe 8. That's 80% waste.
+
+```javascript
+// Raw Stripe payload: ~2.5 KB
+{
+  "id": "ch_...",
+  "object": "charge",
+  "amount": 5000,
+  // ... 45 more fields you never use
+  "metadata": {...},
+  "refunds": {...},
+  "fraud_details": {...}
+}
+
+// Normalized payload: ~0.4 KB  
+{
+  "transaction_id": "ch_...",
+  "amount": 5000,
+  "currency": "usd",
+  "status": "succeeded",
+  "customer_id": "cus_...",
+  "payment_method": "card",
+  "timestamp": "2024-10-10T12:00:00Z"
+}
+```
+
+**At 1M webhooks/month:**
+
+- Raw data: ~2.5 TB/month
+- Normalized: ~0.4 TB/month
+- **Savings: 2.1 TB/month**
+
+This translates to lower infrastructure costs, faster API responses, and reduced network load.
+
+---
+
+### 3. Integrate New Platforms in Hours, Not Weeks
+
+**The Impact:** 10x faster time-to-market for new integrations.
+
+Traditional approach: Study docs → Parse responses → Map fields → Write tests → Deploy → Repeat for next platform.
+
+With normalized schemas: Install package → Use existing handlers → Done.
+
+<CardGroup cols={2}>
+  <Card title="Payments" icon="credit-card">
+    Stripe, PayPal, Razorpay, Polar
+  </Card>
+  <Card title="Authentication" icon="lock">
+    Auth0, Okta, Clerk, Firebase Auth, Cognito
+  </Card>
+  <Card title="Database" icon="database">
+    MongoDB, Supabase, PostgreSQL
+  </Card>
+  <Card title="Infrastructure" icon="server">
+    AWS, Vercel, Railway, Render
+  </Card>
+</CardGroup>
+
+One codebase handles them all. Add a new provider by changing one line:
+
+```diff
+- platform: 'stripe'
++ platform: 'razorpay'
+```
+
+---
+
+### 4. Crystal Clear Data, Zero Ambiguity
+
+**The Impact:** Write less code, prevent bugs, onboard developers faster.
+
+Different platforms use different field names for the same concept:
+
+- Amount: `amount` vs `value` vs `total`
+- Status: `status` vs `state` vs `payment_status`
+- User ID: `customer_id` vs `user_id` vs `customer`
+
+Hookflo standardizes everything:
+
+<Tabs>
+  <Tab title="Payments Schema">
+    ```typescript
+    interface NormalizedPayment {
+      transaction_id: string;
+      amount: number;           // Always in smallest currency unit
+      currency: string;          // Always ISO 4217 (USD, EUR, INR)
+      status: 'succeeded' | 'failed' | 'pending' | 'refunded';
+      customer_id: string;
+      payment_method: 'card' | 'bank_transfer' | 'wallet' | 'other';
+      timestamp: string;         // Always ISO 8601
+    }
+    ```
+  </Tab>
+  <Tab title="Auth Schema">
+    ```typescript
+    interface NormalizedAuth {
+      user_id: string;
+      event_type: 'login' | 'logout' | 'signup' | 'password_reset';
+      timestamp: string;
+      ip_address?: string;
+      device_type?: 'mobile' | 'desktop' | 'tablet';
+      success: boolean;
+    }
+    ```
+
+    <Badge variant="warning">Coming Q1 2025</Badge>
+  </Tab>
+  <Tab title="Database Schema">
+    ```typescript
+    interface NormalizedDatabase {
+      operation: 'create' | 'update' | 'delete';
+      collection: string;        // table/collection name
+      record_id: string;
+      timestamp: string;
+      user_id?: string;
+      changes?: object;
+    }
+    ```
+
+    <Badge variant="warning">Coming Q1 2025</Badge>
+  </Tab>
+</Tabs>
+
+**Benefits:**
+
+- Type-safe across all platforms
+- Self-documenting code
+- Predictable behavior
+- No more "wait, which field has the amount?" moments
+
+---
+
+### 5. Keep Raw Payloads When You Need Them
+
+**The Impact:** Get normalization benefits without losing flexibility.
+
+Sometimes you need platform-specific data. Hookflo gives you both:
+
+```javascript
+const result = normalize(req.body, {
+  platform: 'stripe',
+  category: 'payments',
+  mode: 'hybrid'  // Get both normalized and raw
+});
+
+// Use normalized for business logic
+await processPayment(result.normalized);
+
+// Access raw for platform-specific features
+if (result.raw.payment_method_details?.card?.brand === 'amex') {
+  await applyAmexPerks(result.normalized.customer_id);
+}
+
+// Perfect for debugging
+logger.debug('Full webhook payload:', result.raw);
+```
+
+<Check>
+  **Smart Migration:** Transition legacy systems gradually by keeping raw payloads accessible while moving to normalized data.
+</Check>
+
+---
+
+## Supported Categories
+
+<AccordionGroup>
+  <Accordion title="Payments" icon="credit-card">
+    **Platforms:** Stripe, PayPal, Square, Razorpay, Adyen, Braintree, Paddle, Mollie
+
+    **Normalized Fields:**
+
+    - Transaction ID & amount
+    - Currency (ISO 4217)
+    - Status (succeeded, failed, pending, refunded)
+    - Customer ID
+    - Payment method type
+    - Timestamp (ISO 8601)
+  </Accordion>
+  <Accordion title="Authentication" icon="lock">
+    **Planned Platforms:** Auth0, Okta, Clerk, Firebase Auth, AWS Cognito, WorkOS
+
+    **Planned Normalized Fields:**
+
+    - User ID
+    - Event type (login, logout, signup, password_reset, mfa_enabled)
+    - Success indicator
+    - IP address & device type
+    - Timestamp
+  </Accordion>
+  <Accordion title="Database" icon="database">
+    **Planned Platforms:** MongoDB, Supabase, PostgreSQL, PlanetScale, Firebase, Neon
+
+    **Planned Normalized Fields:**
+
+    - CRUD operation type
+    - Collection/table name
+    - Record ID
+    - Change summary
+    - Actor (user_id)
+    - Timestamp
+  </Accordion>
+  <Accordion title="Infrastructure" icon="server">
+    **Planned Platforms:** AWS, Google Cloud, Azure, Vercel, Railway, Render, Fly.io
+
+    **Planned Normalized Fields:**
+
+    - Resource identifier
+    - Event type (deployment, scaling, failure)
+    - Status & severity level
+    - Region/zone
+    - Timestamp
+  </Accordion>
+</AccordionGroup>
+
+<Info>
+  **Want to influence our roadmap?** [Join our Discord](https://discord.gg/hookflo) or [open a discussion on GitHub](https://github.com/hookflo/tern/discussions) to request specific platforms or categories.
+</Info>
+
+---
+
+## Getting Started
+
+<Steps>
+  <Step title="Install the package">
+    ```bash
+    npm install @hookflo/tern
+    ```
+  </Step>
+  <Step title="Normalize your first webhook">
+    ```javascript
+    import { normalize } from '@hookflo/tern';
+    
+    const payment = normalize(webhookPayload, {
+      platform: 'stripe',
+      category: 'payments'
+    });
+    ```
+  </Step>
+  <Step title="Use consistent data everywhere">
+    ```javascript
+    // Works with Stripe, Razorpay, PayPal, Square...
+    console.log(payment.transaction_id);
+    console.log(payment.amount);
+    console.log(payment.status);
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Before vs After
+
+<CardGroup cols={2}>
+  <Card title="Without Hookflo" icon="xmark" color="#ef4444">
+    - Separate handler per platform
+    - 2-3 weeks per integration
+    - Platform migrations = full rewrites
+    - 100% payload size
+    - Vendor lock-in
+    - Complex testing
+  </Card>
+  <Card title="With Hookflo" icon="check" color="#22c55e">
+    - Single unified handler
+    - Hours per integration
+    - Change config to migrate
+    - 30-60% payload size
+    - Zero vendor lock-in
+    - Simple, consistent tests
+  </Card>
+</CardGroup>
+
+---
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="Which platforms are supported right now?">
+    **Payment platforms are fully supported** including Stripe, PayPal, Square, Razorpay, Adyen, and Braintree. Auth, Database, and Infrastructure categories are in development.
+  </Accordion>
+  <Accordion title="What if I need platform-specific data?">
+    Use `mode: 'hybrid'` to get both normalized and raw payloads. You get the convenience of normalized data with full access to platform-specific fields when needed.
+  </Accordion>
+  <Accordion title="Does this work with custom webhook schemas?">
+    Yes! While we provide pre-built schemas for 50+ platforms, you can define custom normalization rules for internal services or less common platforms.
+  </Accordion>
+  <Accordion title="What's the performance impact?">
+    Negligible. Normalization adds ~1-2ms of processing time but saves significantly more through reduced payload size and faster parsing.
+  </Accordion>
+  <Accordion title="Can I gradually migrate to normalized payloads?">
+    Absolutely. Use hybrid mode to keep raw payloads while transitioning your codebase. Migrate endpoint by endpoint at your own pace.
+  </Accordion>
+  <Accordion title="How do you handle breaking changes from platforms?">
+    We monitor platform APIs and update normalization rules automatically. Your code stays unchanged even when providers change their webhook formats.
+  </Accordion>
+  <Accordion title="Can I request a specific platform or category?">
+    Yes! We're actively building our roadmap based on user feedback. [Join our Discord](https://discord.gg/hookflo) or [open a GitHub discussion](https://github.com/hookflo/tern/discussions) to request features.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Start Normalizing Today
+
+Stop maintaining separate webhook handlers for every platform. Write once, integrate everywhere.
+
+<CardGroup cols={2}>
+  <Card title="Documentation" icon="book" href="https://docs.hookflo.com">
+    Complete guides and API reference
+  </Card>
+  <Card title="npm Package" icon="npm" href="https://www.npmjs.com/package/@hookflo/tern">
+    Install @hookflo/tern
+  </Card>
+  <Card title="GitHub" icon="github" href="https://github.com/Hookflo/tern">
+    View source and contribute
+  </Card>
+  <Card title="Get Started" icon="rocket" href="https://hookflo.com/sign-up">
+    Start your free trial
+  </Card>
+</CardGroup>
