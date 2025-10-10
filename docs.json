@@ -30,6 +30,12 @@
               "webhook-platforms/github"
             ]
           },
+                    {
+            "group": "Blogs",
+            "pages": [
+              "normalization"
+            ]
+          },
           {
             "group": "Notification Channels",
             "pages": [
